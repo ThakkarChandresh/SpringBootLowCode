@@ -1,0 +1,123 @@
+package com.project.model;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "projects")
+public class ProjectVO extends AuditDetails implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column
+	private String projectName;
+
+	@Column
+	private String projectDescription;
+
+	@Column
+	private String projectIcon;
+
+	@Column
+	private String headerColor;
+
+	@Column
+	private String menuColor;
+
+	@Column
+	private String footerColor;
+
+	@Column
+	private boolean archiveStatus = false;
+
+	@ManyToOne
+	private LoginVO loginVO;
+
+	protected static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
+
+	public LoginVO getLoginVO() {
+		return loginVO;
+	}
+
+	public void setLoginVO(LoginVO loginVO) {
+		this.loginVO = loginVO;
+	}
+
+	public String getProjectIcon() {
+		return projectIcon;
+	}
+
+	public void setProjectIcon(String projectIcon) {
+		this.projectIcon = projectIcon;
+	}
+
+	public boolean isArchiveStatus() {
+		return archiveStatus;
+	}
+
+	public void setArchiveStatus(boolean archiveStatus) {
+		this.archiveStatus = archiveStatus;
+	}
+
+	public String getHeaderColor() {
+		return headerColor;
+	}
+
+	public String getMenuColor() {
+		return menuColor;
+	}
+
+	public String getFooterColor() {
+		return footerColor;
+	}
+
+	public void setHeaderColor(String headerColor) {
+		this.headerColor = headerColor;
+	}
+
+	public void setMenuColor(String menuColor) {
+		this.menuColor = menuColor;
+	}
+
+	public void setFooterColor(String footerColor) {
+		this.footerColor = footerColor;
+	}
+}

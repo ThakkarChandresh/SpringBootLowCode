@@ -1,0 +1,28 @@
+.card1, .card2 {
+	border-radius: 4px;
+	background: #fff;
+	transition: .3s transform cubic-bezier(.155, 1.105, .295, 1.12), .3s
+		box-shadow, .3s -webkit-transform
+		cubic-bezier(.155, 1.105, .295, 1.12);
+	cursor: pointer;
+	min-height: 170px;
+}
+.card1:hover, .card2:hover {
+	transform: scale(1.05);
+	border: 1.2px solid #7571f9;
+	box-shadow: 0 30px 40px #eee, 0 10px 15px #eee;
+}
+
+.card1 h3, .card2 h3 {
+	font-weight: 600;
+}
+/*view-options */
+.view-options {
+	border-radius: 6px;
+	transition: .4s transform cubic-bezier(.155, 1.105, .295, 1.12), .3s
+		box-shadow, .3s -webkit-transform
+		cubic-bezier(.155, 1.105, .295, 1.12);
+}
+.view-options:hover {
+ 	transform: scale(1.05);
+}

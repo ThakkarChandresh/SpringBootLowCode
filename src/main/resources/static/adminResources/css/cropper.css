@@ -1,0 +1,26 @@
+.crop-container {
+	width: 330px;
+	height: 330px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5%;
+	position: relative;
+}
+
+.center-button {
+	width: 50%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#item-img-output {
+	height: 220px;
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5%;
+	margin-bottom:3%;
+	position: relative;
+}

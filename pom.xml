@@ -80,7 +80,7 @@
 			<version>1.4</version>
 		</dependency>
 		<dependency>
-			<groupId>com.CCodeMVC</groupId>
+			<groupId>io.github.ccodemvc</groupId>
 			<artifactId>CCodeMVC</artifactId>
 			<version>1.0</version>
 		</dependency>

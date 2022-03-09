@@ -4,11 +4,11 @@ var headerRow;
 var length;
 var columns;
 var deleteEditAction = '<button type="button" id="editButton" onclick="currentModuleData(moduleId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Edit"><i class="fas fa-edit action-icon"></i></button> <button type="button" id="archiveButton" onclick="archiveUnarchiveModule(moduleId,true)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Archive"> <i class="fas fa-archive action-icon"></i> </button> <button type="button" id="deleteButton" onclick="deleteModule(moduleId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Delete"> <i class="fas fa-trash-alt action-icon"></i> </button><button type="button" id="downloadButton" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button>';
-var toogleOptions = '<div class="mr-5"> <label class="toggler" id="archived">Archived Modules</label> <div class="toggle"> <input type="checkbox" id="isArchive" class="check"> <b class="b switch"></b> </div></div>';
+var toogleOptions = '<div class="col-md-auto"> <label class="toggler" id="archived">Archived Modules</label> <div class="toggle"> <input type="checkbox" id="isArchive" class="check"> <b class="b switch"></b> </div></div>';
 var newdeleteEditAction;
 var unarchiveAction = '<button type="button" id="archiveButton" onclick="archiveUnarchiveModule(moduleId,false)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Un-Archive"><i class="fas fa-box-open"></i></button>';
 
-var dropdownOptions = '<select id="project-module-dropdown" class="form-select border rounded w-25 float-right text-left"> ';
+var dropdownOptions = '<select id="project-module-dropdown" class="form-select border rounded w-25 col-2 float-right text-left"> ';
 var projectId;
 
 $(document).ready(
@@ -107,6 +107,15 @@ $(document).on('click', '#isArchive', function() {
 
 	    fetchData(0);
 });
+
+$('#moduleName').keypress(function(){
+	 $('#nameError').html("");
+});
+
+$('#moduleDescription').keypress(function(){
+	 $('#descError').html("");
+});
+
 
 // Delete Module
 function deleteModule(moduleId) {

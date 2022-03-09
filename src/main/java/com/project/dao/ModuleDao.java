@@ -19,18 +19,20 @@ public interface ModuleDao extends JpaRepository<ModuleVO, Long> {
 	List<ModuleVO> findById(Long moduleId);
 
 	// To avoid duplication of module in a project
-	List<ModuleVO> findByModuleNameAndProjectVO_Id(String moduleName, Long projectId);
+	List<ModuleVO> findByLoginVO_UsernameAndModuleNameAndProjectVO_Id(String username,String moduleName, Long projectId);
 
 	// To find module of a project
-	List<ModuleVO> findByProjectVO_IdAndArchiveStatus(Long projectId, boolean status);
+	List<ModuleVO> findByLoginVO_UsernameAndProjectVO_IdAndArchiveStatus(String username,Long projectId, boolean status);
 
 	// To fetch data by query in pageable
-	Page<ModuleVO> findByModuleNameContainingAndProjectVO_IdAndArchiveStatusOrModuleDescriptionContainingAndProjectVO_IdAndArchiveStatusOrProjectVO_ProjectNameContainingAndProjectVO_IdAndArchiveStatus(
-			String moduleName, Long id, boolean status, String moduleDescription, Long id1, boolean status1,
-			String projectName, Long id2, boolean status2, Pageable pageable);
+	@Query("from ModuleVO mvo where mvo.moduleName like %:#{#moduleName}% and mvo.projectVO.loginVO.username=:#{#username} and mvo.projectVO.id=:#{#projectId} and mvo.archiveStatus=:#{#status} or mvo.moduleDescription like %:#{#moduleDescription}% and mvo.projectVO.loginVO.username=:#{#username} and mvo.projectVO.id=:#{#projectId} or mvo.projectVO.projectName like %:#{#projectName}% and mvo.projectVO.loginVO.username=:#{#username} and mvo.projectVO.id=:#{#projectId}")
+	Page<ModuleVO> searchModuleByQuery(@Param("moduleName") String moduleName,
+			@Param("moduleDescription") String moduleDescription, @Param("projectName") String projectName,
+			@Param("username") String username, @Param("status") boolean status, @Param("projectId") Long id,
+			Pageable pageable);
 
 	// To fetch all data in pageable
-	Page<ModuleVO> findByProjectVO_IdAndArchiveStatus(Long projectId, boolean status, Pageable pageable);
+	Page<ModuleVO> findByLoginVO_UsernameAndProjectVO_IdAndArchiveStatus(String username,Long projectId, boolean status, Pageable pageable);
 
 	// To archive all modules of a project
 	@Modifying

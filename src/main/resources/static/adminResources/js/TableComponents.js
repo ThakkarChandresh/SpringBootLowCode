@@ -1,4 +1,4 @@
-var searchAndLength = '<div class="row"> <div class="d-flex align-items-center col-sm-12 col-md-6"> <div class="dataTables_length" id="order-listing_wrapper_length"> <label>Show <select name="length" id="length_dropbox"> <option value="5">5</option> <option value="10" selected>10</option> <option value="15">15</option> </select> entries </label> </div> </div> <div class="d-flex justify-content-end align-items-center col-sm-12 col-md-6"> <div id="order-listing_wrapper_filter" class="dataTables_filter"> <label class="mb-0"><input type="search" class="form-control mr-3" id="txt_searchall" placeholder="Enter search text" /> </label> </div> </div> </div> <hr class="mb-0">'
+var searchAndLength = '<div class="row"> <div class="d-flex align-items-center col-md-2"> <div class="dataTables_length" id="order-listing_wrapper_length"> <label>Show <select name="length" id="length_dropbox"> <option value="5">5</option> <option value="10" selected>10</option> <option value="15">15</option> </select> entries </label> </div> </div> <div class="d-flex justify-content-end align-items-center col-sm-auto col-md-10"> <div id="order-listing_wrapper_filter" class="dataTables_filter"> <label class="mb-0"><input type="search" class="form-control mr-3" id="txt_searchall" placeholder="Enter search text" /> </label> </div> </div> </div> <hr class="mb-0">'
 var ordeListingWrapper = '<div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer"></div>'
 var middelRow = '<div class="row" id="dataRow"><div class="col-sm-12" id="table">'
 var paginationRow = '<div class="row"> <div class="col-sm-12 col-md-5"> <div class="dataTables_info" id="show"></div> </div> <div class="col-sm-12 col-md-7"> <ul class="pagination justify-content-end"> </ul> </div> </div>'
@@ -56,7 +56,7 @@ function createTableHeader(headerRow) {
     $('#dataTable thead tr').empty();
 
     //Appending header
-    $('.table thead tr').append(headerRow);
+    $('#dataTable thead tr').append(headerRow);
 }
 
 

@@ -4,7 +4,7 @@ var headerRow;
 var length;
 var columns;
 var deleteEditAction = '<button type="button" id="editButton" onclick="currentProjectData(projectId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Edit"><i class="fas fa-edit action-icon"></i></button><button type="button" id="archiveButton" onclick="archiveUnarchiveProject(projectId,true)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Archive"><i class="fas fa-archive action-icon"></i> </button> <button type="button" id="deleteButton" onclick="deleteCurrentProject(projectId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Delete"> <i class="fas fa-trash-alt action-icon"></i> </button><button type="button" id="downloadButton" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action"  data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button>';
-var toogleOptions = '<div class="mr-5"> <label class="toggler" id="archived">Archived Projects</label> <div class="toggle"> <input type="checkbox" id="isArchive" class="check"> <b class="b switch"></b> </div></div>';
+var toogleOptions = '<div class="col-md-auto"> <label class="toggler" id="archived">Archived Projects</label> <div class="toggle"> <input type="checkbox" id="isArchive" class="check"> <b class="b switch"></b> </div></div>';
 var unarchiveAction = '<button type="button" id="archiveButton" onclick="archiveUnarchiveProject(projectId,false)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Un-Archive"><i class="fas fa-box-open"></i></button>';
 var newdeleteEditAction;
 
@@ -13,6 +13,18 @@ Coloris({
 	swatches : [ '#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51',
 			'#d62828', '#023e8a', '#0077b6', '#0096c7', '#00b4d8',
 			'#48cae4' ]
+});
+
+$('#projectName').keypress(function(){
+	 $('#nameError').html("");
+});
+
+$('#projectDescription').keypress(function(){
+	 $('#descError').html("");
+});
+
+$('#projectIcon').keypress(function(){
+	 $('#iconError').html("");
 });
 
 $(document).ready(function() {
@@ -230,6 +242,7 @@ $('#addProjectModel').on('hidden.bs.modal', function(e) {
 
     $('#nameError').html("");
     $('#descError').html("");
+    $('#iconError').html("");
 
     $('#projectId').val(0);
     

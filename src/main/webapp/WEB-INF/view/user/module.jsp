@@ -156,7 +156,7 @@
 								class="required-field">*</span></label>
 							<f:textarea path="moduleDescription" id="moduleDescription"
 								class="form-control form-control-lg pt-1 px-1"
-								value=""  rows="3"/>
+								value=""  rows="2"/>
 							<span id="descError" class="text-danger font-weight-bold">
 							</span>
 						</div>

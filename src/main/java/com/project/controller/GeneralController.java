@@ -45,16 +45,16 @@ public class GeneralController {
 	}
 
 	@GetMapping(value = "user/getProjectModule")
-	public ResponseEntity<List<ModuleVO>> getProjectModule(@ModelAttribute LoginVO loginVO,
-			@ModelAttribute ProjectVO projectVO, @RequestParam String projectId) {
+	public ResponseEntity<List<ModuleVO>> getProjectModule(@ModelAttribute ProjectVO projectVO,
+			@RequestParam String projectId) {
 
-		loginVO.setUsername(this.baseMethods.getUsername());
+		String username = this.baseMethods.getUsername();
 
 		if (projectId != null) {
 			projectVO.setId(Long.parseLong(projectId));
 		}
 
-		List<ModuleVO> modules = this.moduleService.getCurrentProjectModule(projectVO);
+		List<ModuleVO> modules = this.moduleService.getCurrentProjectModule(username, projectVO);
 
 		return new ResponseEntity<List<ModuleVO>>(modules, HttpStatus.OK);
 	}
@@ -85,17 +85,17 @@ public class GeneralController {
 	}
 
 	@GetMapping(value = "user/archive-unarchive-project")
-	public ResponseEntity<Object> archiveUnarchiveProject(@RequestParam Long projectId,@RequestParam boolean status) {
-		
+	public ResponseEntity<Object> archiveUnarchiveProject(@RequestParam Long projectId, @RequestParam boolean status) {
+
 		this.projectService.archiveProject(projectId, status);
 		this.moduleService.archiveProjectModule(projectId, status);
 
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "user/archive-unarchive-module")
-	public ResponseEntity<Object> archiveUnarchiveModule(@RequestParam Long moduleId,@RequestParam boolean status) {
-		
+	public ResponseEntity<Object> archiveUnarchiveModule(@RequestParam Long moduleId, @RequestParam boolean status) {
+
 		this.moduleService.archiveModule(moduleId, status);
 
 		return new ResponseEntity<Object>(HttpStatus.OK);

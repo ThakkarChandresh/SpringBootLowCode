@@ -42,10 +42,10 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
-	public boolean checkModuleName(ModuleVO moduleVO) {
+	public boolean checkModuleName(ModuleVO moduleVO, String username) {
 		boolean expression;
 
-		List<ModuleVO> moduleList = this.moduleDao.findByModuleNameAndProjectVO_Id(moduleVO.getModuleName(),
+		List<ModuleVO> moduleList = this.moduleDao.findByLoginVO_UsernameAndModuleNameAndProjectVO_Id(username, moduleVO.getModuleName(),
 				moduleVO.getProjectVO().getId());
 
 		if (!moduleList.isEmpty() && moduleVO.getId() == 0) {
@@ -60,22 +60,20 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
-	public List<ModuleVO> getCurrentProjectModule(ProjectVO projectVO) {
-		return this.moduleDao.findByProjectVO_IdAndArchiveStatus(projectVO.getId(), false);
+	public List<ModuleVO> getCurrentProjectModule(String username,ProjectVO projectVO) {
+		return this.moduleDao.findByLoginVO_UsernameAndProjectVO_IdAndArchiveStatus(username,projectVO.getId(), false);
 	}
 
 	@Override
 	public Page<ModuleVO> searchCurrentProjectModules(Long id, String moduleName, String moduleDescription,
-			String projectName,boolean isArchive, Pageable pageable) {
+			String projectName, boolean isArchive,String username, Pageable pageable) {
 
-		return moduleDao
-				.findByModuleNameContainingAndProjectVO_IdAndArchiveStatusOrModuleDescriptionContainingAndProjectVO_IdAndArchiveStatusOrProjectVO_ProjectNameContainingAndProjectVO_IdAndArchiveStatus(
-						moduleName, id, isArchive, moduleDescription, id, isArchive, projectName, id, isArchive, pageable);
+		return this.moduleDao.searchModuleByQuery(moduleName, moduleDescription, projectName, username, isArchive, id, pageable);
 	}
 
 	@Override
-	public Page<ModuleVO> searchByProjectId(Long projectId,boolean isArchive,Pageable pageable) {
-		return moduleDao.findByProjectVO_IdAndArchiveStatus(projectId, isArchive, pageable);
+	public Page<ModuleVO> searchByProjectId(String username,Long projectId, boolean isArchive, Pageable pageable) {
+		return moduleDao.findByLoginVO_UsernameAndProjectVO_IdAndArchiveStatus(username,projectId, isArchive, pageable);
 	}
 
 	@Override

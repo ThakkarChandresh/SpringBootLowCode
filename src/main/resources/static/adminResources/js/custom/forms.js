@@ -1,58 +1,137 @@
+//bulding pagination
 var columnHeader;
 var headerRow;
-var view='Grid-View';
+var length;
+var columns;
+var deleteEditAction = '<button type="button" id="editButton" onclick="" class="border-0 btn btn-outline-secondary btn-rounded btn-icon edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Edit"><i class="fas fa-edit action-icon"></i></button><button type="button" id="archiveButton" onclick="" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Archive"><i class="fas fa-archive action-icon"></i> </button> <button type="button" id="deleteButton" onclick="deleteCurrentForm(formId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Delete"> <i class="fas fa-trash-alt action-icon"></i> </button><button type="button" id="downloadButton" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action"  data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button>';
+var newdeleteEditAction;
 
-var downloadButton = '<button type="button" id="downloadButton" class="border-0 d-bloack mt-2 mx-auto btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button>';
-var projectGrid = '<div class="col-12 col-sm-6 col-md-6 col-xl-3 grid-margin stretch-card mb-4 px-3"> <div class="card card1 card-body text-center justify-content-center pt-5">';
+var projectDropdownOptions= '<select id="project-module-dropdown" class="form-select border rounded w-25 float-right text-left"> ';
+var moduleDropdownOptions = '<select id="module-dropdown" class="form-select border rounded ml-3 mr-2 w-25 float-right text-left"> ';
+var projectId;
+var moduleId;
 
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"]',
-    trigger: 'hover',
-    container: 'body'
-}).on('click', '[data-toggle="tooltip"]', function () {
-    $('[data-toggle="tooltip"]').tooltip('dispose');
-});
+$(document).ready(function() {
 
-$(document).ready(function(){
-	columns = [{
-	    column: 'Id',
-	    sortable: false,
-	    width: '10%',
-	    name: 'id'
-	},
-	{
-	    column: 'Project Name',
-	    sortable: true,
-	    width: '30%',
-	    icon: 'fas fa-sort',
-	    name: 'projectName'
-	},
-	{
-	    column: 'Project Description',
-	    sortable: true,
-	    width: '30%',
-	    icon: 'fas fa-sort',
-	    name: 'projectDescription'
-	},
-	{
-	    column: 'Icon',
-	    sortable: false,
-	    width: '30%',
-	},
-	]
-	
-	fetchData(0);
-	
-	for (i = 0; i < columns.length; i++) {
+    columns = [{
+            column: 'Id',
+            sortable: false,
+            width: '10%',
+            name: 'id'
+        },
+        {
+            column: 'Form Name',
+            sortable: true,
+            width: '15%',
+            icon: 'fas fa-sort',
+            name: 'formName'
+        },
+        {
+            column: 'Module Name',
+            sortable: true,
+            width: '15%',
+            icon: 'fas fa-sort',
+            name: 'moduleVO.moduleName'
+        },
+        {
+            column: 'Project Name',
+            sortable: true,
+            width: '15%',
+            icon: 'fas fa-sort',
+            name: 'moduleVO.projectVO.projectName'
+        },
+        {
+            column: 'Created Date',
+            sortable: true,
+            width: '15%',
+            icon: 'fas fa-sort-down',
+            name: 'createdDate'
+        },
+        {
+            column: 'Updated Date',
+            sortable: true,
+            width: '15%',
+            icon: 'fas fa-sort',
+            name: 'updatedDate'
+        },
+        {
+            column: 'Action',
+            sortable: false,
+            width: '15%',
+        }
+    ]
+
+  //creating projects and modules dropdown
+    $.ajax({
+
+        type: "GET",
+        url: "getActiveUserProjects",
+        async: false,
+        success: function(response) {
+            $.each(response, function(index, value) {
+            	if(value.id == clickedProjectId){
+            		projectDropdownOptions += '<option value="' + value.id + '" selected>' + value.projectName + '</option>'
+            	}else{
+            		projectDropdownOptions += '<option value="' + value.id + '">' + value.projectName + '</option>'
+            	}
+            });
+        },
+    });
+
+    projectDropdownOptions+= '</select>';
+
+    $('#order-listing_wrapper_filter').parent().prepend(projectDropdownOptions);
+
+    projectId = $('#project-module-dropdown').val();
+    
+    $.ajax({
+
+        type: "GET",
+        url: "getProjectModule?projectId="+projectId,
+        async: false,
+        success: function(response) {
+        	if(response.length != 0){
+        	$.each(response, function(index, value) {
+        		if(value.id == clickedModuleId){
+        			moduleDropdownOptions+= '<option value="' + value.id + '" selected>' + value.moduleName + '</option>'
+        		}else{
+        			moduleDropdownOptions+= '<option value="' + value.id + '">' + value.moduleName + '</option>'
+        		}
+        	});
+        	
+        	}else{
+        		moduleDropdownOptions+='<option selected="true" disabled="disabled">Select modules</option>'
+        	}
+        },
+        
+    });
+    
+    moduleDropdownOptions +='</select>';
+    
+    $('#project-module-dropdown').after(moduleDropdownOptions);
+    
+    //Initail Setting Module Id As Clicked Module Id
+    if (clickedModuleId){
+    	moduleId = clickedModuleId;
+    }else{
+    	moduleId = $('#module-dropdown').val();
+    }
+    
+    
+    //Initial Fetching
+    fetchData(0);
+
+
+    for (i = 0; i < columns.length; i++) {
 
         if (columns[i] && columns[i].sortable) {
-            columnHeader = '<th style="cursor:pointer;width: ' + columns[i].width + ';" class="table-headers py-3">';
+            columnHeader = '<th style="cursor:pointer;width: ' + columns[i].width + ';" class="table-headers">';
 
             columnHeader = columnHeader + columns[i].column;
 
             columnHeader = columnHeader + '<i class="' + columns[i].icon + '"></i>';
         } else {
-            columnHeader = '<th style="width: ' + columns[i].width + ';" class="table-headers py-3">';
+            columnHeader = '<th style="width: ' + columns[i].width + ';" class="table-headers">';
 
             columnHeader = columnHeader + columns[i].column;
         }
@@ -61,13 +140,45 @@ $(document).ready(function(){
 
         headerRow += columnHeader
     }
+
     createTableHeader(headerRow);
-	
+
 });
 
-function fetchData(page, sort, sortBy, query_String) {
-    length = $("#length_dropbox").val();
+$(document).on("change", "#project-module-dropdown", function() {
+	$('#module-dropdown').empty();
+	
+	
+projectId = $('#project-module-dropdown').val();
+    
+    $.ajax({
 
+        type: "GET",
+        url: "getProjectModule?projectId="+projectId,
+        async: false,
+        success: function(response) {
+        	$('#module-dropdown').append('<option selected="true" disabled="disabled">Select Modules</option>')
+	        	$.each(response, function(index, value) {
+	        		$('#module-dropdown').append('<option value="'+value.id+'">'+value.moduleName+'</option>')
+	        	});
+        },
+        
+    });
+    
+    moduleId = $('#module-dropdown').val();
+    
+});
+
+$(document).on("change", "#module-dropdown",function(){
+	moduleId = $('#module-dropdown').val();
+	fetchData(0, sort, sortBy, query_String);
+});
+
+
+function fetchData(page, sort, sortBy, query_String) {
+
+    length = $("#length_dropbox").val();
+    
     //Replacing Column name with actual name and modifying icon in column array
     if (sort && sortBy) {
         for (i = 0; i < columns.length; i++) {
@@ -83,107 +194,88 @@ function fetchData(page, sort, sortBy, query_String) {
     let sort_Dir = (typeof sort !== 'undefined') ? sort : 'DESC';
     let sortByColumn = (typeof sortBy !== 'undefined') ? sortBy : 'createdDate';
 
-    if (view === 'Grid-View'){
-    	 var a={
-    	            size: 8,
-    	            query: query_String,
-    	            sort: sort_Dir,
-    	            sortBy: sortByColumn,
-    	            isArchive: false,
-    	        }
-    }
-	else if(view === 'Table-View'){
-   	 var a={
-	            size: length,
-	            query: query_String,
-	            sort: sort_Dir,
-	            sortBy: sortByColumn,
-	            isArchive: false,
-	        }
-	}
-   
     // Ajax Call To API
     $.ajax({
         type: "POST",
-        url: "projects/" + page,
-        data: a,
-
+        url: "form/"+page,
+        data: {
+            size: length,
+            query: query_String,
+            sort: sort_Dir,
+            sortBy: sortByColumn,
+            projectId: projectId,
+            moduleId: moduleId,
+        },
 
         success: function(response) {
-        	if (view === 'Grid-View'){
-        		$('#dataRow').empty();
-        		gridView(response);
-        	}
-        	else if(view === 'Table-View'){
-        		tableView(response,page)
-        	}
+
+            if (response.numberOfElements == 0) {
+                var cols = $("#dataTable thead tr th").length;
+
+                let bodyRow = '<tr style="height:100px; text-align:center" >' +
+                    '<td colspan="' + cols + '" style="font-size:x-large">' + "No Data Found" + '</td>' +
+                    +'</tr>'
+
+                createTableBody(bodyRow, page, response);
+
+            } else {
+                let bodyRow;
+
+                // Add Values To Table
+                $.each(response.content, function(index, value) {
+
+                    newdeleteEditAction = deleteEditAction.replace(/formId/g, value.id);
+
+                    bodyRow += '<tr>' +
+                        '<td>' + ((page * length) + (index + 1)) + '</td>' +
+                        '<td>' + value.formName+ '</td>' +
+                        '<td>' + value.moduleVO.moduleName+ '</td>' +
+                        '<td>' + value.moduleVO.projectVO.projectName + '</td>' +
+                        '<td>' + getDate(value.createdDate) + '</td>' +
+                        '<td>' + getDate(value.updatedDate) + '</td>' +
+                        '<td>' + newdeleteEditAction + '</td>' +
+                        '</tr>';
+                });
+
+                createTableBody(bodyRow, page, response);
+            }
         }
     });
 }
-function gridView(response){
-	$('#dataRow').empty();
-	$('#dataRow').addClass('px-2 py-3');
-	$('#show').hide();
-	$('hr').hide();
-	
-	$('#order-listing_wrapper_length').hide();
-	$('ul.pagination').empty();
-	
-	
-	$.each(response.content,function(index,value){
-		var newProject = projectGrid + '<input type="hidden" value='+value.id+'> <i class="'+value.projectIcon+' fa-3x"></i><h3 class="mt-3">'+value.projectName+'</h3>'+downloadButton;
-		$('#dataRow').append(newProject);
-	});
-	
-	if ($('ul.pagination li').length - 2 != response.totalPages) {
-        $('ul.pagination').empty();
-        buildGridPagination(response.number,response.totalPages,view);
-    }
-}
-function tableView(response,page){
-    if (response.numberOfElements == 0) {
-        var cols = $("#dataTable thead tr th").length;
 
-        let bodyRow = '<tr style="height:100px; text-align:center" >' +
-            '<td colspan="' + cols + '" style="font-size:x-large">' + "No Data Found" + '</td>' +
-            +'</tr>'
+function deleteCurrentForm(formId) {
+    swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this form!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "form/" + formId,
+                    async: false,
+                    success: function(response) {
+                        swal("Form deleted successfully!", {
+                            icon: "success",
+                        });
+                        fetchData(0);
+                    },
+                });
 
-        createTableBody(bodyRow, page, response);
-
-    } else {
-        let bodyRow;
-
-        // Add Values To Table
-        $.each(response.content, function(index, value) {
-            bodyRow += '<tr>' +
-                '<td class="py-3">' + ((page * length) + (index + 1)) + '</td>' +
-                '<td> ' + value.projectName + '</td>' +
-                '<td>' + value.projectDescription + '</td>' +
-                '<td><i class="' + value.projectIcon + '"></i> ' + value.projectIcon + '</td>' +
-                '</tr>';
+            } else {
+                fetchData(0);
+            }
         });
-
-        createTableBody(bodyRow, page, response);
-    }
 }
 
-$(document).on('click','#view-button',function(){
-		if($('#view-button').text().trim() === 'Table-View'){
-			view = 'Table-View';
-			$('#dataRow').append('<table id="dataTable" class="table"></table>');
-			buildTable();
-			createTableHeader(headerRow);
-			fetchData(0);
-			
-			$('#view-button').text('Grid-View');
-			$('#view-button').prepend('<i class="fas fa-th mr-2"></i>');
-			
-		}else if($('#view-button').text().trim() === 'Grid-View'){
-			view = 'Grid-View';
-			fetchData(0);
-
-			$('#view-button').text('Table-View');
-			$('#view-button').prepend('<i class="fas fa-bars mr-2"></i>');
-		}
+$('#addFormsButton').click(function(){
+	window.location.href="addForms";
 });
 
+function getDate(date){
+	const d = new Date(date);
+	return d.toDateString();
+}

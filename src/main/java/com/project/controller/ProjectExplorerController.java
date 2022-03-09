@@ -14,7 +14,7 @@ import com.project.service.ProjectService;
 import com.project.util.BaseMethods;
 
 @Controller
-public class FormsController {
+public class ProjectExplorerController {
 
 	@Autowired
 	private ProjectService projectService;
@@ -22,12 +22,12 @@ public class FormsController {
 	@Autowired
 	private BaseMethods baseMethods;
 
-	@GetMapping(value = "user/forms")
+	@GetMapping(value = "user/projectexplorer")
 	public ModelAndView formsPage() {
 
 		List<ProjectVO> projectList = projectService.getActiveUserProjects(this.baseMethods.getUsername());
 
-		return new ModelAndView(UserPathEnum.USER_FORMS.getPath(), ConstantEnum.PROJECT_LIST.getValue(), projectList);
+		return new ModelAndView(UserPathEnum.USER_PROJECT_EXPLORER.getPath(), ConstantEnum.PROJECT_LIST.getValue(), projectList);
 	}
 
 }

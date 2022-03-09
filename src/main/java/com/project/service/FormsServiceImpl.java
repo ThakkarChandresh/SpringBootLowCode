@@ -41,4 +41,10 @@ public class FormsServiceImpl implements FormsService {
 						formName, id, moduleName, id, projectName, id, pageable);
 	}
 
+	@Override
+	public void deleteForm(FormsVO formsVO) {
+		this.formsDao.delete(formsVO);
+		
+	}
+
 }

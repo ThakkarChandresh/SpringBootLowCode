@@ -32,6 +32,9 @@ public class ModuleVO extends AuditDetails implements Serializable {
 
 	@ManyToOne
 	private ProjectVO projectVO;
+	
+	@ManyToOne
+	private LoginVO loginVO;
 
 	public Long getId() {
 		return id;

@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.project.enums.ConstantEnum;
 import com.project.enums.UserPathEnum;
-import com.project.model.LoginVO;
 import com.project.model.ModuleVO;
 import com.project.model.ProjectVO;
 import com.project.service.ModuleService;
@@ -88,6 +87,8 @@ public class ModuleController {
 			@ModelAttribute ProjectVO projectVO, @PathVariable Long moduleId, @PathVariable Long projectId,
 			@PathVariable String moduleName) {
 
+		String username = this.baseMethods.getUsername();
+
 		projectVO.setId(projectId);
 
 		moduleVO.setProjectVO(projectVO);
@@ -95,7 +96,7 @@ public class ModuleController {
 		moduleVO.setId(moduleId);
 		moduleVO.setModuleName(moduleName);
 
-		boolean status = this.moduleService.checkModuleName(moduleVO);
+		boolean status = this.moduleService.checkModuleName(moduleVO, username);
 
 		return new ResponseEntity<Boolean>(status, HttpStatus.OK);
 	}
@@ -103,7 +104,7 @@ public class ModuleController {
 	// READ AND MODULE PAGE LOADING
 	@PostMapping(value = "/{page}")
 	public ResponseEntity<Page<ModuleVO>> loadProjectDataTable(@PathVariable int page,
-			@RequestParam Map<String, String> allRequestParams, @ModelAttribute LoginVO loginVO) {
+			@RequestParam Map<String, String> allRequestParams) {
 
 		int size = Integer.parseInt(allRequestParams.get("size"));
 		String query = allRequestParams.get("query");
@@ -112,7 +113,7 @@ public class ModuleController {
 		String projectId = allRequestParams.get("projectId");
 		boolean isArchive = Boolean.parseBoolean((allRequestParams.get("isArchive")));
 
-		loginVO.setUsername(this.baseMethods.getUsername());
+		String username = this.baseMethods.getUsername();
 
 		Long activeProjectId;
 		List<ProjectVO> projectList;
@@ -133,10 +134,10 @@ public class ModuleController {
 		Page<ModuleVO> data;
 
 		if ((query != null) && (!query.trim().isEmpty())) {
-			data = moduleService.searchCurrentProjectModules(activeProjectId, query.trim(), query.trim(), query.trim(),isArchive,
-					requestedPage);
+			data = moduleService.searchCurrentProjectModules(activeProjectId, query.trim(), query.trim(), query.trim(),
+					isArchive, username, requestedPage);
 		} else {
-			data = moduleService.searchByProjectId(activeProjectId, isArchive, requestedPage);
+			data = moduleService.searchByProjectId(username,activeProjectId, isArchive, requestedPage);
 		}
 
 		return new ResponseEntity<Page<ModuleVO>>(data, HttpStatus.OK);

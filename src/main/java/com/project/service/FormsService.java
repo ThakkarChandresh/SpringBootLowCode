@@ -15,4 +15,6 @@ public interface FormsService {
 	Page<FormsVO> findAllForms(Long id, Pageable pageable);
 
 	Page<FormsVO> searchInCurrentModule(Long id,String formName, String moduleName, String projectName, Pageable pageable);
+	
+	void deleteForm(FormsVO formsVO);
 }

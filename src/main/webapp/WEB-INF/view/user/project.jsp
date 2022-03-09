@@ -118,7 +118,7 @@
 				<f:form action="projects" method="POST" id="projectForm"
 					modelAttribute="projectVO">
 					<div class="modal-body">
-						<div class="form-group">
+						<div class="form-group mb-2">
 							<label class="form-label">Project Name <span
 								class="required-field">*</span></label>
 							<f:input path="projectName" id="projectName"
@@ -127,17 +127,17 @@
 							<span id="nameError" class="text-danger font-weight-bold">
 							</span>
 						</div>
-						<div class="form-group">
+						<div class="form-group mb-2">
 							<label class="form-label">Project Description <span
 								class="required-field">*</span></label>
 
 							<f:textarea path="projectDescription" id="projectDescription"
-								class="form-control form-control-lg pt-1 px-1" value="" rows="3" />
+								class="form-control form-control-lg pt-1 px-1" value="" rows="2" />
 							<span id="descError" class="text-danger font-weight-bold">
 							</span>
 							<f:input path="id" type="hidden" id="projectId" value="0" />
 						</div>
-						<div class="form-group">
+						<div class="form-group mb-2">
 							<label
 								class="form-label d-flex justify-content-between align-items-center">
 								<span> Project Icon <span class="required-field">*</span>
@@ -155,20 +155,20 @@
 							<span id="iconError" class="text-danger font-weight-bold">
 							</span>
 						</div>
-						<div class="form-group">
+						<div class="form-group mb-2">
 							<label
 								class="form-label d-flex justify-content-between align-items-center">
-								<h4><span> Choose Theme <span class="required-field">*</span></h4>
+								<span class="font-weight-bold"> Choose Theme <span class="required-field">*</span>
 							</span>
 							</label>
-							<hr>
+							<hr class="my-1">
 							 <label
 								class="form-label d-flex justify-content-between align-items-center">
 								<span>Header color<span class="required-field">*</span></span>
 							</label>
 							<f:input path="headerColor" type="text" id="headerColor"
 								class="form-control form-control-lg border-left-1 modal-input coloris"
-								value="#000000" />
+								value="#000000" role="button"/>
 							
 							<label
 								class="form-label d-flex justify-content-between align-items-center">
@@ -176,7 +176,7 @@
 							</label>
 							<f:input path="menuColor" type="text" id="menuColor"
 								class="form-control form-control-lg border-left-1 modal-input coloris"
-								value="#000000" />
+								value="#000000" role="button"/>
 
 							<label
 								class="form-label d-flex justify-content-between align-items-center">
@@ -185,7 +185,7 @@
 							</label>
 							<f:input path="footerColor" type="text" id="footerColor"
 								class="form-control form-control-lg border-left-1 modal-input coloris"
-								value="#000000" />
+								value="#000000" role="button"/>
 						</div>
 					</div>
 					<div class="modal-footer">

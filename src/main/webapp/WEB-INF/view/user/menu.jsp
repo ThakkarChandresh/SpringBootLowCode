@@ -21,7 +21,12 @@
 		</a></li>
 
 		<!------------------------------------ Forms ------------------------------------>
-		<li class="nav-item"><a class="nav-link" href="forms"> <i
+		<li class="nav-item"><a class="nav-link" href="form"> <i
+				class="mdi mdi-file-multiple menu-icon"></i> <span class="menu-title">Form</span>
+		</a></li>
+		
+		<!------------------------------------ Project Explorer ------------------------------------>
+		<li class="nav-item"><a class="nav-link" href="projectexplorer"> <i
 				class="mdi mdi-file-multiple menu-icon"></i> <span class="menu-title">Project Explorer</span>
 		</a></li>
 

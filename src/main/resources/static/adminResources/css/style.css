@@ -15372,6 +15372,13 @@ a.close.disabled {
   }
 }
 
+@media (min-width: 992px) {
+  .modal-lg75,
+  .modal-xl75 {
+    max-width: 75%;
+  }
+}
+
 @media (min-width: 1200px) {
   .modal-xl {
     max-width: 1140px;
@@ -17301,6 +17308,11 @@ button.bg-teal:focus {
 .mt-4,
 .my-4 {
   margin-top: 1.5rem !important;
+}
+
+.mt-1_8,
+.my-1_8{
+  margin-top: 1.8rem !important;
 }
 
 .mr-4,

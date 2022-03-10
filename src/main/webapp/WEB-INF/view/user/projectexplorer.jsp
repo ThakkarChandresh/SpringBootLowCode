@@ -51,7 +51,7 @@
 				<div class="content-wrapper">
 					<div class="d-flex justify-content-between align-items-center">
 						<div class="d-flex justify-content-start align-items-center">
-							<i class="mdi mdi-file-multiple menu-icon mr-3"></i>
+							<i style="font-size: 35px" class="mdi mdi-folder mr-3"></i>
 							<div>
 								<h4>Project Explorer</h4>
 								<nav aria-label="breadcrumb">
@@ -64,7 +64,8 @@
 							</div>
 						</div>
 						<button type="button"
-							class="btn btn-outline-primary btn-icon-text view-options px-3 mr-2" id="view-button">
+							class="btn btn-outline-primary btn-icon-text view-options px-3 mr-2"
+							id="view-button">
 							<i class="fas fa-bars mr-2"></i>Table-View
 						</button>
 

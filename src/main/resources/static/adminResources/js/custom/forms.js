@@ -174,6 +174,26 @@ $(document).on("change", "#module-dropdown",function(){
 	fetchData(0, sort, sortBy, query_String);
 });
 
+$("#projectId").change(function() {
+	$('#moduleId').empty();
+	
+	projectId = $('#projectId').val();
+    
+    $.ajax({
+
+        type: "GET",
+        url: "getProjectModule?projectId="+projectId,
+        async: false,
+        success: function(response) {
+        	$('#moduleId').append('<option selected="true" disabled="disabled">Select Modules</option>')
+	        	$.each(response, function(index, value) {
+	        		$('#moduleId').append('<option value="'+value.id+'">'+value.moduleName+'</option>')
+	        	});
+        },
+        
+    });
+});
+
 
 function fetchData(page, sort, sortBy, query_String) {
 

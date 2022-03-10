@@ -22,5 +22,6 @@ public interface FormsDao extends JpaRepository<FormsVO, Long> {
 	Page<FormsVO> findByFormNameContainingAndModuleVO_IdOrModuleVO_ModuleNameContainingAndModuleVO_IdOrModuleVO_ProjectVO_ProjectNameContainingAndModuleVO_Id(
 			String formName, Long id, String moduleName, Long id1, String projectName, Long id2, Pageable pageable);
 
-	Page<FormsVO> findByModuleVO_Id(Long id, Pageable pageable);
+	//find currents module's forms
+	Page<FormsVO> findByLoginVO_UsernameAndModuleVO_Id(String username, Long id, Pageable pageable);
 }

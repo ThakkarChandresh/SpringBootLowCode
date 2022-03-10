@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.project.dao.FormDetailDao;
 import com.project.dao.FormsDao;
+import com.project.model.FormDetailsVO;
 import com.project.model.FormsVO;
 import com.project.model.LoginVO;
 import com.project.model.ModuleVO;
@@ -21,6 +23,9 @@ public class FormsServiceImpl implements FormsService {
 	@Autowired
 	private FormsDao formsDao;
 
+	@Autowired
+	private FormDetailDao formDetailDao;
+	
 	@Override
 	public List<FormsVO> getCurrentModuleForms(LoginVO loginVO, ModuleVO moduleVO) {
 
@@ -29,8 +34,8 @@ public class FormsServiceImpl implements FormsService {
 	}
 
 	@Override
-	public Page<FormsVO> findAllForms(Long id, Pageable pageable) {
-		return formsDao.findByModuleVO_Id(id, pageable);
+	public Page<FormsVO> findAllForms(String username, Long id, Pageable pageable) {
+		return formsDao.findByLoginVO_UsernameAndModuleVO_Id(username,id, pageable);
 	}
 
 	@Override
@@ -45,6 +50,17 @@ public class FormsServiceImpl implements FormsService {
 	public void deleteForm(FormsVO formsVO) {
 		this.formsDao.delete(formsVO);
 		
+	}
+
+	@Override
+	public void insertForm(FormsVO formsVO) {
+		this.formsDao.save(formsVO);
+		
+	}
+
+	@Override
+	public void insertFormDetails(FormDetailsVO formDetailsVO) {
+		this.formDetailDao.save(formDetailsVO);
 	}
 
 }

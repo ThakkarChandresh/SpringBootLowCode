@@ -20,13 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.dto.FormDataDTO;
+import com.project.dto.FormDetailsDTO;
+import com.project.dto.OptionsDTO;
 import com.project.enums.ConstantEnum;
 import com.project.enums.UserPathEnum;
+import com.project.model.FormDetailsVO;
 import com.project.model.FormsVO;
 import com.project.model.LoginVO;
 import com.project.model.ModuleVO;
 import com.project.model.ProjectVO;
 import com.project.service.FormsService;
+import com.project.service.LoginService;
 import com.project.service.ModuleService;
 import com.project.service.ProjectService;
 import com.project.util.BaseMethods;
@@ -36,11 +40,14 @@ import com.project.util.BaseMethods;
 public class FormController {
 
 	@Autowired
+	private LoginService loginService;
+
+	@Autowired
 	private ProjectService projectService;
 
 	@Autowired
 	private ModuleService moduleService;
-	
+
 	@Autowired
 	private BaseMethods baseMethods;
 
@@ -50,20 +57,68 @@ public class FormController {
 	@GetMapping
 	public ModelAndView viewForms() {
 		String username = this.baseMethods.getUsername();
-		
+
 		List<ProjectVO> projectList = this.projectService.getActiveUserProjects(this.baseMethods.getUsername());
 		ProjectVO projectVO = projectList.get(0);
 		List<ModuleVO> moduleList = this.moduleService.getCurrentProjectModule(username, projectVO);
 
-		return new ModelAndView(UserPathEnum.USER_FORMS.getPath(), ConstantEnum.PROJECT_LIST.getValue(), projectList).addObject(ConstantEnum.MODULE_LIST.getValue(), moduleList);
+		return new ModelAndView(UserPathEnum.USER_FORMS.getPath(), ConstantEnum.PROJECT_LIST.getValue(), projectList)
+				.addObject(ConstantEnum.MODULE_LIST.getValue(), moduleList);
 	}
 
 	@PostMapping
-	public ResponseEntity insertForm(@RequestBody FormDataDTO formData) {
+	public ResponseEntity<Object> insertForm(@ModelAttribute ProjectVO projectVO, @ModelAttribute ModuleVO moduleVO,
+			@ModelAttribute FormsVO formsVO, @ModelAttribute LoginVO loginVO, @RequestBody FormDataDTO formData) {
+		loginVO.setUsername(this.baseMethods.getUsername());
+		List<LoginVO> loginList = this.loginService.searchLoginID(loginVO);
+		formsVO.setLoginVO(loginList.get(0));
 
-		System.out.println(formData.getProjectId());
+		projectVO.setId(formData.getProjectId());
+		formsVO.setProjectVO(projectVO);
+
+		moduleVO.setId(formData.getModuleId());
+		formsVO.setModuleVO(moduleVO);
+
+		formsVO.setFormName(formData.getFormName());
+		formsVO.setForDescription(formData.getFormDescription());
+
+		this.formsService.insertForm(formsVO);
 		
-		return new ResponseEntity(HttpStatus.OK);
+		List<FormDetailsDTO> formDetails = formData.getFormDetails();
+
+		String values = "";
+		String labels = "";
+
+		for (FormDetailsDTO formDetail : formDetails) {
+			FormDetailsVO formDetailVO = new FormDetailsVO();
+
+			formDetailVO.setFormsVO(formsVO);
+			
+			formDetailVO.setFieldName(formDetail.getFieldName());
+			formDetailVO.setFieldType(formDetail.getFieldType());
+
+			List<OptionsDTO> options = formDetail.getOptions();
+			if (options!=null && !options.isEmpty()) {
+				for (OptionsDTO option : options) {
+					values += option.getValue();
+					labels += option.getLabel();
+					if (options.iterator().hasNext()) {
+						values += ",";
+						labels += ",";
+					}
+				}
+			}else{
+				values = "";
+				labels = "";
+			}
+
+			formDetailVO.setLabel(labels);
+			formDetailVO.setValue(values);
+
+			this.formsService.insertFormDetails(formDetailVO);
+		}
+
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/{page}")
@@ -85,7 +140,7 @@ public class FormController {
 
 		activeModuleId = Long.parseLong(moduleId);
 
-		data = formsService.findAllForms(activeModuleId, requestedPage);
+		data = formsService.findAllForms(loginVO.getUsername(), activeModuleId, requestedPage);
 
 		if ((query != null) && (!query.trim().isEmpty())) {
 			data = formsService.searchInCurrentModule(activeModuleId, query.trim(), query.trim(), query.trim(),
@@ -97,7 +152,7 @@ public class FormController {
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Object> deleteProject(@ModelAttribute FormsVO formsVO, @PathVariable Long id) {
-		formsVO.setId(id);
+		formsVO.setFormId(id);
 		this.formsService.deleteForm(formsVO);
 
 		return new ResponseEntity<Object>(HttpStatus.OK);

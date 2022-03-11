@@ -83,37 +83,32 @@ public class FormController {
 		formsVO.setForDescription(formData.getFormDescription());
 
 		this.formsService.insertForm(formsVO);
-		
-		List<FormDetailsDTO> formDetails = formData.getFormDetails();
 
-		String values = "";
-		String labels = "";
+		List<FormDetailsDTO> formDetails = formData.getFormDetails();
 
 		for (FormDetailsDTO formDetail : formDetails) {
 			FormDetailsVO formDetailVO = new FormDetailsVO();
 
 			formDetailVO.setFormsVO(formsVO);
-			
+
 			formDetailVO.setFieldName(formDetail.getFieldName());
 			formDetailVO.setFieldType(formDetail.getFieldType());
 
 			List<OptionsDTO> options = formDetail.getOptions();
-			if (options!=null && !options.isEmpty()) {
-				for (OptionsDTO option : options) {
-					values += option.getValue();
-					labels += option.getLabel();
-					if (options.iterator().hasNext()) {
-						values += ",";
-						labels += ",";
-					}
-				}
-			}else{
-				values = "";
-				labels = "";
-			}
+			if (options != null && !options.isEmpty()) {
+				StringBuilder values = new StringBuilder();
+				StringBuilder labels = new StringBuilder();
 
-			formDetailVO.setLabel(labels);
-			formDetailVO.setValue(values);
+				for (OptionsDTO option : options) {
+					values.append(option.getValue());
+					values.append(",");
+					labels.append(option.getLabel());
+					labels.append(",");
+				}
+
+				formDetailVO.setLabel(labels.deleteCharAt(labels.length() - 1).toString());
+				formDetailVO.setValue(values.deleteCharAt(values.length() - 1).toString());
+			}
 
 			this.formsService.insertFormDetails(formDetailVO);
 		}

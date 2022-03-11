@@ -221,7 +221,8 @@ $('#submit').click(function(){
 		        contentType : 'application/json',
 		        data: JSON.stringify(formData),
 		        success: function(response){
-		        	console.log("Moklyu to khara");
+		        	$("#formModal").modal('hide');
+		        	fetchData(0, sort, sortBy, query_String);
 		        }
 		 });
 	}

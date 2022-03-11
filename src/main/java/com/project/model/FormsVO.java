@@ -23,22 +23,22 @@ public class FormsVO extends AuditDetails implements Serializable {
 
 	@Column
 	private String formName;
-	
+
 	@Column
 	private String formDescription;
-	
+
 	@Column
 	private boolean archiveStatus = false;
 
 	@ManyToOne
 	private LoginVO loginVO;
-	
+
 	@ManyToOne
 	private ProjectVO projectVO;
-	
+
 	@ManyToOne
 	private ModuleVO moduleVO;
-	
+
 	public Long getFormId() {
 		return formId;
 	}

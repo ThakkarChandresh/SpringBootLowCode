@@ -35,7 +35,7 @@ public class FormsServiceImpl implements FormsService {
 
 	@Override
 	public Page<FormsVO> findAllForms(String username, Long id, Pageable pageable) {
-		return formsDao.findByLoginVO_UsernameAndModuleVO_Id(username,id, pageable);
+		return formsDao.findByLoginVO_UsernameAndModuleVO_IdAndArchiveStatus(username,id, pageable, false);
 	}
 
 	@Override
@@ -61,6 +61,11 @@ public class FormsServiceImpl implements FormsService {
 	@Override
 	public void insertFormDetails(FormDetailsVO formDetailsVO) {
 		this.formDetailDao.save(formDetailsVO);
+	}
+
+	@Override
+	public void archiveForm(long formId, boolean status) {
+		this.formsDao.archiveForm(formId, status);
 	}
 
 }

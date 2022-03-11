@@ -3,9 +3,9 @@ var columnHeader;
 var headerRow;
 var length;
 var columns;
-var deleteEditAction = '<button type="button" id="editButton" onclick="" class="border-0 btn btn-outline-secondary btn-rounded btn-icon edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Edit"><i class="fas fa-edit action-icon"></i></button><button type="button" id="archiveButton" onclick="" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Archive"><i class="fas fa-archive action-icon"></i> </button> <button type="button" id="deleteButton" onclick="deleteCurrentForm(formId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Delete"> <i class="fas fa-trash-alt action-icon"></i> </button><button type="button" id="downloadButton" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action"  data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button>';
+var deleteEditAction = '<button type="button" id="editButton" onclick="" class="border-0 btn btn-outline-secondary btn-rounded btn-icon edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Edit"><i class="fas fa-edit action-icon"></i></button><button type="button" id="archiveButton" onclick="archiveUnarchiveForm(formId,true)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Archive"><i class="fas fa-archive action-icon"></i> </button> <button type="button" id="deleteButton" onclick="deleteCurrentForm(formId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Delete"> <i class="fas fa-trash-alt action-icon"></i> </button><button type="button" id="downloadButton" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action"  data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button>';
 var newdeleteEditAction;
-
+var unarchiveAction = '<button type="button" id="archiveButton" onclick="archiveUnarchiveForm(formId,false)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Un-Archive"><i class="fas fa-box-open"></i></button>';
 var projectDropdownOptions= '<select id="project-module-dropdown" class="form-select border rounded w-25 float-right text-left"> ';
 var moduleDropdownOptions = '<select id="module-dropdown" class="form-select border rounded ml-3 mr-2 w-25 float-right text-left"> ';
 var projectId;
@@ -244,7 +244,7 @@ function fetchData(page, sort, sortBy, query_String) {
                 // Add Values To Table
                 $.each(response.content, function(index, value) {
 
-                    newdeleteEditAction = deleteEditAction.replace(/formId/g, value.id);
+                    newdeleteEditAction = deleteEditAction.replace(/formId/g, value.formId);
 
                     bodyRow += '<tr>' +
                         '<td>' + ((page * length) + (index + 1)) + '</td>' +
@@ -294,6 +294,17 @@ function deleteCurrentForm(formId) {
 $('#addFormsButton').click(function(){
 	window.location.href="addForms";
 });
+
+function archiveUnarchiveForm(formId,status) {
+    $.ajax({
+        type: "GET",
+        url: "archive-unarchive-form?formId="+formId+"&status="+status,
+        async: false,
+        success: function(response) {},
+    });
+
+    fetchData(0);
+}
 
 function getDate(date){
 	const d = new Date(date);

@@ -16,6 +16,7 @@ import com.project.enums.UserPathEnum;
 import com.project.model.LoginVO;
 import com.project.model.ModuleVO;
 import com.project.model.ProjectVO;
+import com.project.service.FormsService;
 import com.project.service.ModuleService;
 import com.project.service.ProjectService;
 import com.project.util.BaseMethods;
@@ -28,6 +29,9 @@ public class GeneralController {
 
 	@Autowired
 	private ModuleService moduleService;
+	
+	@Autowired
+	private FormsService formService;
 
 	@Autowired
 	private ProjectService projectService;
@@ -97,6 +101,14 @@ public class GeneralController {
 	public ResponseEntity<Object> archiveUnarchiveModule(@RequestParam Long moduleId, @RequestParam boolean status) {
 
 		this.moduleService.archiveModule(moduleId, status);
+
+		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "user/archive-unarchive-form")
+	public ResponseEntity<Object> archiveUnarchiveForm(@RequestParam Long formId, @RequestParam boolean status) {
+		System.out.println("archive-unarchive-form");
+		this.formService.archiveForm(formId, status);
 
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}

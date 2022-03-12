@@ -1,5 +1,7 @@
 package com.project.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -114,6 +116,39 @@ public class FormController {
 		}
 
 		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<List<FormDetailsDTO>> getFormDetails(@PathVariable Long id) {
+
+		List<FormDetailsVO> formDetailsVOList = this.formsService.findFormDetails(id);
+		List<FormDetailsDTO> formDetailsDTOList = new ArrayList<FormDetailsDTO>();
+
+		for (FormDetailsVO formDetail : formDetailsVOList) {
+			FormDetailsDTO formDetailDTO = new FormDetailsDTO();
+			formDetailDTO.setFieldName(formDetail.getFieldName());
+			formDetailDTO.setFieldType(formDetail.getFieldType());
+
+			if (formDetail.getValue() != null && formDetail.getLabel() != null) {
+				List<String> values = new ArrayList<String>(Arrays.asList(formDetail.getValue().split(",")));
+				List<String> labels = new ArrayList<String>(Arrays.asList(formDetail.getLabel().split(",")));
+
+				List<OptionsDTO> options = new ArrayList<OptionsDTO>();
+
+				for (int i = 0; i < values.size(); i++) {
+					OptionsDTO optionDTO = new OptionsDTO();
+					optionDTO.setValue(values.get(i));
+					optionDTO.setLabel(labels.get(i));
+
+					options.add(optionDTO);
+				}
+
+				formDetailDTO.setOptions(options);
+			}
+
+			formDetailsDTOList.add(formDetailDTO);
+		}
+		return new ResponseEntity<List<FormDetailsDTO>>(formDetailsDTOList,HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/{page}")

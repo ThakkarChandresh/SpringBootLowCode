@@ -107,7 +107,6 @@ public class GeneralController {
 	
 	@GetMapping(value = "user/archive-unarchive-form")
 	public ResponseEntity<Object> archiveUnarchiveForm(@RequestParam Long formId, @RequestParam boolean status) {
-		System.out.println("archive-unarchive-form");
 		this.formService.archiveForm(formId, status);
 
 		return new ResponseEntity<Object>(HttpStatus.OK);

@@ -9,7 +9,7 @@
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>User | Modules</title>
+<title>User | Forms</title>
 
 
 <!-- directly coming from on module name click -->
@@ -121,7 +121,8 @@
 									<div class="form-group col">
 										<label class="form-label">Project Name: <span
 											class="required-field">*</span></label> <select
-											class="form-control form-control-lg border-left-1 modal-input" id="projectId">
+											class="form-control form-control-lg border-left-1 modal-input"
+											id="projectId">
 											<c:forEach var="p" items="${projectList}">
 												<option value="${p.id}">${p.projectName}</option>
 											</c:forEach>
@@ -131,7 +132,8 @@
 									<div class="form-group col">
 										<label class="form-label">Module Name: <span
 											class="required-field">*</span></label> <select
-											class="form-control form-control-lg border-left-1 modal-input" id="moduleId">
+											class="form-control form-control-lg border-left-1 modal-input"
+											id="moduleId">
 											<c:forEach var="m" items="${moduleList}">
 												<option value="${m.id}">${m.moduleName}</option>
 											</c:forEach>
@@ -195,6 +197,7 @@
 								<div class="form-group row" id="sub-menu"></div>
 								<hr>
 
+
 								<table class="table table-striped border">
 									<thead>
 										<tr class="text-center">
@@ -226,6 +229,73 @@
 					</div>
 				</div>
 				<!--Forms Modal Ends -->
+
+				<!--Forms Details Modal starts -->
+				<div class="modal fade" id="formDetailModal" tabindex="-1"
+					role="dialog" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog modal-lg75" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Form Details</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<table class="table table-striped border">
+									<thead>
+										<tr class="text-center">
+											<th rowspan="2" class="pb-3 border-right" scope="col">#</th>
+											<th rowspan="2" class="pb-3 border-right" scope="col">Field
+												Name</th>
+											<th rowspan="2" class="pb-3 border-right" scope="col">Field
+												Type</th>
+											<th colspan="2" scope="col">Options</th>
+										</tr>
+										<tr class="text-center">
+											<th class="border-right" scope="col">values</th>
+											<th scope="col">Lables</th>
+										</tr>
+									</thead>
+									<tbody id="form-details-data">
+									</tbody>
+								</table>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--Forms Details Modal Ends -->
+
+				<!--Forms Preview Modal starts -->
+				<div class="modal fade" id="formPreviewModal" tabindex="-1"
+					role="dialog" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog modal-lg75" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Preview</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div id="formPreview"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--Forms Details Modal Ends -->
+
+
 			</div>
 			<!-- content-wrapper ends -->
 		</div>
@@ -272,7 +342,9 @@
 	<script
 		src="<%=request.getContextPath()%>/adminResources/js/sweetalert.min.js"></script>
 	<script
-		src="<%=request.getContextPath()%>/adminResources/js/custom/forms.js"></script>
+		src="<%=request.getContextPath()%>/adminResources/js/custom/form.js"></script>
+	<script
+		src="<%=request.getContextPath()%>/adminResources/js/custom/formgenerator.js"></script>
 	<script
 		src="<%=request.getContextPath()%>/adminResources/js/custom/formCreator.js"></script>
 	<!-- End custom js for this page-->

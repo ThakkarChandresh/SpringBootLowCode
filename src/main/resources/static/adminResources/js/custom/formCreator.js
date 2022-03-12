@@ -115,7 +115,7 @@ $(document).on('click',"#fieldAddButton", function() {
 		}
 		
 		formDetails.push(field);
-		appendToTable(formDetails);
+		appendToTable("table-data",formDetails);
 	}
 });
 
@@ -150,13 +150,13 @@ $(document).on('click',"#subAdd",function(){
 		$('#input-value').val("");
 		$('#input-label').val("");
 		
-		appendToTable(formDetails);
+		appendToTable("table-data",formDetails);
 	}
 });
 
 
-function appendToTable(formDetails){
-	$('#table-data').empty();
+function appendToTable(targetId,formDetails){
+	$('#'+targetId).empty();
 	var row='';
 	for (var i = 0 ; i< formDetails.length; i++){
 		var value='';
@@ -186,7 +186,7 @@ function appendToTable(formDetails){
 		row+= '</tr>';
 		
 	}
-	$('#table-data').append(row);
+	$('#'+targetId).append(row);
 }
 
 $('#formModal').on('hidden.bs.modal', function(e) {
@@ -204,6 +204,23 @@ $('#formModal').on('hidden.bs.modal', function(e) {
 	$('#table-data').empty();
 	$('#table-data').append('<td class="text-center" colspan="5">Add Fields From Above Section</td>');
 });
+
+$('#formModal').on('shown.bs.modal', function(e) {
+	options = [];
+	field = {};
+	formDetails = [];
+	
+	$('#name').val("");
+	$('#description').val("");
+	
+	$('#fieldName').val("");
+	$('#fieldType').prop('selectedIndex',0);
+	$('#sub-menu').empty();
+	
+	$('#table-data').empty();
+	$('#table-data').append('<td class="text-center" colspan="5">Add Fields From Above Section</td>');
+});
+
 
 $('#submit').click(function(){
 	if(validateForm()){
@@ -226,6 +243,41 @@ $('#submit').click(function(){
 		        }
 		 });
 	}
+});
+
+function formInfo(formId){
+	   $.ajax({
+	        type: "GET",
+	        url: "form/"+formId,
+	        async: false,
+	        success: function(response) {
+	        	formViewDetails = response;	
+	        },
+	    });
+	   $('#formDetailModal').modal('show');
+	   appendToTable("form-details-data",formViewDetails);
+}
+
+$('#formDetailModal').on('hidden.bs.modal', function(e) {
+	$('#form-details-data').empty();
+});
+
+function formPreview(formId){
+	 	var form;
+		$.ajax({
+	        type: "GET",
+	        url: "form/"+formId,
+	        async: false,
+	        success: function(response) {
+	        	form = generateForm(response);	
+	        },
+	    });
+		console.log(form);
+		$('#formPreview').append(form);
+		$('#formPreviewModal').modal('show');
+}
+$('#formPreviewModal').on('hidden.bs.modal', function(e) {
+	$('#formPreview').empty();
 });
 
 

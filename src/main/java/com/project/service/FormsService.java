@@ -25,4 +25,6 @@ public interface FormsService {
 	void insertFormDetails(FormDetailsVO formDetailsVO);
 	
 	void archiveForm(long formId, boolean status);
+
+	List<FormDetailsVO> findFormDetails(Long id);
 }

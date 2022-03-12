@@ -68,4 +68,9 @@ public class FormsServiceImpl implements FormsService {
 		this.formsDao.archiveForm(formId, status);
 	}
 
+	@Override
+	public List<FormDetailsVO> findFormDetails(Long id) {
+		return this.formDetailDao.findByFormsVO_FormId(id);
+	}
+
 }

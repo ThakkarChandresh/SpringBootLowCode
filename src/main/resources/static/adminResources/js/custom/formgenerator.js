@@ -22,12 +22,12 @@ function generateForm(formDetail){
 				
 				newSubElement.type = formDetail[i].fieldType;
 				newSubElement.name = camelize(formDetail[i].fieldName);
-				newSubElement.className = "from-control";
+				newSubElement.className = "form-check-input";
 				
 				newSubElement.id = camelize(subInputs[j].label);
 				newSubElement.value = subInputs[j].value;
 				
-				elementList += newSubElement.outerHTML;
+				elementList += '<div class="form-check">'+newSubElement.outerHTML+'<label class="form-check-label" for="'+subInputs[j].label+'">'+subInputs[j].label+'</label></div>';
 			}
 			form.insertAdjacentHTML('beforeend', '<div class="form-group"><label for="'+formDetail[i].fieldName+'">'+formDetail[i].fieldName+'</label>'+elementList+'</div>');
 	}else if(formDetail[i].fieldType === 'dropdown'){

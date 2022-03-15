@@ -4,13 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Add</title>
 
 <!-- Fonts Awesome Icon CSS -->
 <link rel="stylesheet" href="<%=request.getContextPath()%>/adminResources/theme/css/all.css">
 <!--  End -->
-
-
 
 <!-- CSS for this page -->
 <link rel="stylesheet" href="<%=request.getContextPath()%>/adminResources/theme/css/style.css">
@@ -21,44 +19,12 @@
 </head>
 <body>
 	<!-- Header-->
-	<div class="header">
-		<div class="head-text">HEADER</div>
-		<ul class="navigation_bar">
-			<li><img src="<%=request.getContextPath()%>/adminResources/theme/profile/profile.png" alt="profile"></li>
-			<li>Logout</li>
-		</ul>
-	</div>
+	<jsp:include page="header.jsp"></jsp:include>
 	<!-- End Header -->
 
 
 	<!-- Menu Starts -->
-	<div class="sidebar closed">
-		<div class="logo-details">
-			<i class="fab fa-cuttlefish"></i> <span class="logo_name">CHANDRESH</span>
-			<i class="fas fa-bars"></i>
-		</div>
-		<ul class="nav-links">
-			<li><a href="index.html"> <i class="fas fa-home"></i> <span
-					class="link_name">Home</span>
-			</a>
-				<ul class="sub-menu blank">
-					<li><a class="link_name" href="index.html">Home</a></li>
-				</ul></li>
-			<li>
-				<div class="iocn-link">
-					<a href="index.html"> <i class="fas fa-globe-africa"></i> <span
-						class="link_name">Country</span>
-					</a> <i class="fas fa-angle-down arrow"></i>
-				</div>
-				<ul class="sub-menu">
-					<li><a class="link_name" href="index.html">Country</a></li>
-					<li><a href="froms.html">Add</a></li>
-					<li><a href="tables.html">View</a></li>
-				</ul>
-			</li>
-
-		</ul>
-	</div>
+	<jsp:include page="menu.jsp"></jsp:include>
 	<!-- Menu End -->
 
 	<!-- Main -->
@@ -131,9 +97,7 @@
 
 
 	<!-- Footer -->
-	<div class="footer">
-		<div class="foot-text">Copyright@ Chandresh Thakkar</div>
-	</div>
+	<jsp:include page="footer.jsp"></jsp:include>
 	<!-- End Footer -->
 
 	<!-- Custom JS for this page -->

@@ -169,16 +169,15 @@ function appendToTable(targetId,formDetails){
 			if(formDetails[i]['options']){
 				for (var j=0 ; j<formDetails[i]['options'].length; j++){
 					if(j == 0){
-						value+= '<td class="border-right">'+formDetails[i]['options'][j]['value'];
-						label+='<td>'+formDetails[i]['options'][j]['label']
+						value+= '<td class="border-right"><ul><li>'+formDetails[i]['options'][j]['value']+'</li>';
+						label+='<td><ul><li>'+formDetails[i]['options'][j]['label']+'</li>'
 					}else{
-						value+= ','+'<br>'+formDetails[i]['options'][j]['value'];
-						label+= ','+'<br>'+formDetails[i]['options'][j]['label'];
+						value+= '<li>'+formDetails[i]['options'][j]['value']+'</li>';
+						label+= '<li>'+formDetails[i]['options'][j]['label']+'</li>';
 					}
 				}
-				
-				row+= value;
-				row+=label;
+				row+= value+'</ul>';
+				row+=label+'</ul>';
 			}else{
 				row+= '<td class="border-right">-</td>';
 				row+= '<td>-</td>';
@@ -251,7 +250,8 @@ function formInfo(formId){
 	        url: "form/"+formId,
 	        async: false,
 	        success: function(response) {
-	        	formViewDetails = response;	
+	        	formViewDetails = response;
+	        	console.log(generateForm(response));
 	        },
 	    });
 	   $('#formDetailModal').modal('show');
@@ -260,24 +260,6 @@ function formInfo(formId){
 
 $('#formDetailModal').on('hidden.bs.modal', function(e) {
 	$('#form-details-data').empty();
-});
-
-function formPreview(formId){
-	 	var form;
-		$.ajax({
-	        type: "GET",
-	        url: "form/"+formId,
-	        async: false,
-	        success: function(response) {
-	        	form = generateForm(response);	
-	        },
-	    });
-		console.log(form);
-		$('#formPreview').append(form);
-		$('#formPreviewModal').modal('show');
-}
-$('#formPreviewModal').on('hidden.bs.modal', function(e) {
-	$('#formPreview').empty();
 });
 
 

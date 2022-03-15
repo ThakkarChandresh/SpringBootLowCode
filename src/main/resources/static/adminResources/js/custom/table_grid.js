@@ -112,7 +112,7 @@ function fetchData(page, sort, sortBy, query_String) {
         success: function(response) {
         	if (view === 'Grid-View'){
         		$('#dataRow').empty();
-        		gridView(response);
+        		gridView(response,page);
         	}
         	else if(view === 'Table-View'){
         		tableView(response,page)
@@ -120,10 +120,18 @@ function fetchData(page, sort, sortBy, query_String) {
         }
     });
 }
-function gridView(response){
+function gridView(response,page){
 	$('#dataRow').empty();
 	$('#dataRow').addClass('px-2 py-3');
-	$('#show').hide();
+	
+	if (response.numberOfElements == 0) {
+		$('#show').html('showing 0 to 0 of ' + response.totalElements + ' entries');
+		$('#dataRow').append('<span style="margin:auto;font-size:x-large">No Data Found </span>')
+	}else{
+		var start = (page * 8);
+		$('#show').html('showing ' + (start + 1) + ' to ' + (start + response.numberOfElements) + ' of ' + response.totalElements + ' entries');
+	}
+	
 	$('hr').hide();
 	
 	$('#order-listing_wrapper_length').hide();

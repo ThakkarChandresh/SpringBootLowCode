@@ -30,4 +30,7 @@ public interface FormsDao extends JpaRepository<FormsVO, Long> {
 	@Modifying
 	@Query("update FormsVO fvo set fvo.archiveStatus=:#{#status} where fvo.formId=:#{#id}")
 	public void archiveForm(@Param("id") long formId, @Param("status") boolean status);
+
+	//find form by id
+	List<FormsVO> findByFormId(long formId);
 }

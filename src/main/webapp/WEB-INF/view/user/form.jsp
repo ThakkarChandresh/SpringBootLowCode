@@ -45,6 +45,7 @@
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/adminResources/css/all.css">
 <!-- endinject -->
+
 <link rel="shortcut icon"
 	href="<%=request.getContextPath()%>/adminResources/images/favicon.png" />
 </head>
@@ -57,9 +58,6 @@
 		<!-- Header End -->
 
 		<div class="container-fluid page-body-wrapper">
-
-
-
 			<!-- Menu -->
 			<jsp:include page="menu.jsp"></jsp:include>
 
@@ -270,32 +268,6 @@
 					</div>
 				</div>
 				<!--Forms Details Modal Ends -->
-
-				<!--Forms Preview Modal starts -->
-				<div class="modal fade" id="formPreviewModal" tabindex="-1"
-					role="dialog" aria-labelledby="exampleModalLabel"
-					aria-hidden="true">
-					<div class="modal-dialog modal-lg75" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLabel">Preview</h5>
-								<button type="button" class="close" data-dismiss="modal"
-									aria-label="Close">
-									<span aria-hidden="true">×</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<div id="formPreview"></div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--Forms Details Modal Ends -->
-
-
 			</div>
 			<!-- content-wrapper ends -->
 		</div>

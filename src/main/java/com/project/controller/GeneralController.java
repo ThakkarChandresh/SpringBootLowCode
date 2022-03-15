@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.project.enums.ConstantEnum;
 import com.project.enums.UserPathEnum;
+import com.project.model.FormsVO;
 import com.project.model.LoginVO;
 import com.project.model.ModuleVO;
 import com.project.model.ProjectVO;
@@ -110,5 +111,13 @@ public class GeneralController {
 		this.formService.archiveForm(formId, status);
 
 		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "user/previewForm")
+	public ModelAndView previewForm(@RequestParam Long formid){
+		List<FormsVO> form = this.formService.findForm(formid);
+		
+		
+		return new ModelAndView("user/formpreview");
 	}
 }

@@ -72,5 +72,10 @@ public class FormsServiceImpl implements FormsService {
 	public List<FormDetailsVO> findFormDetails(Long id) {
 		return this.formDetailDao.findByFormsVO_FormId(id);
 	}
+	
+	@Override
+	public List<FormsVO> findForm(Long id){
+		return this.formsDao.findByFormId(id);
+	}
 
 }

@@ -27,4 +27,6 @@ public interface FormsService {
 	void archiveForm(long formId, boolean status);
 
 	List<FormDetailsVO> findFormDetails(Long id);
+
+	List<FormsVO> findForm(Long id);
 }

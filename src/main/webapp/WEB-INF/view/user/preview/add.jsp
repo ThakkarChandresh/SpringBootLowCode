@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -16,6 +17,17 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/adminResources/theme/css/bootstrap.min.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/adminResources/theme/css/bread.css">
 <!-- End -->
+
+<!-- Internal Js -->
+<script type="text/javascript">
+	var formId;
+	var pageName = 'add';
+	
+	<c:if test='${not empty formId}'>
+		formId = ${formId};
+	</c:if>
+</script>
+<!-- end internal js -->
 </head>
 <body>
 	<!-- Header-->
@@ -29,7 +41,6 @@
 
 	<!-- Main -->
 	<div id="main">
-
 		<!-- Breadcrum -->
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="index.html">Country</a></li>
@@ -40,55 +51,8 @@
 
 		<div class="container">
 			<div class="card">
-				<div class="card-body">
-					<h4 class="card-title">Basic form elements</h4>
-					<p class="card-description">Basic form elements</p>
-					<form class="forms-sample">
-						<div class="form-group">
-							<label for="exampleInputName1">Name</label> <input type="text"
-								class="form-control" id="exampleInputName1" placeholder="Name">
-						</div>
-						<div class="form-group">
-							<label for="exampleInputEmail3">Email address</label> <input
-								type="email" class="form-control" id="exampleInputEmail3"
-								placeholder="Email">
-						</div>
-						<div class="form-group">
-							<label for="exampleInputPassword4">Password</label> <input
-								type="password" class="form-control" id="exampleInputPassword4"
-								placeholder="Password">
-						</div>
-						<div class="form-group">
-							<label for="exampleSelectGender">Gender</label> <select
-								class="form-control" id="exampleSelectGender">
-								<option>Male</option>
-								<option>Female</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label>File upload</label> <input type="file" name="img[]"
-								class="file-upload-default">
-							<div class="input-group col-xs-12">
-								<input type="text" class="form-control file-upload-info"
-									disabled placeholder="Upload Image"> <span
-									class="input-group-append">
-									<button class="file-upload-browse btn btn-sm btn-primary"
-										type="button">Upload</button>
-								</span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="exampleInputCity1">City</label> <input type="text"
-								class="form-control" id="exampleInputCity1"
-								placeholder="Location">
-						</div>
-						<div class="form-group">
-							<label for="exampleTextarea1">Textarea</label>
-							<textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
-						</div>
-						<button type="submit" class="btn btn-primary mr-2">Submit</button>
-						<button class="btn btn-light" type="reset">Cancel</button>
-					</form>
+				<div class="card-body" id="form-card">
+					<h4 class="card-title"></h4>
 				</div>
 			</div>
 		</div>
@@ -101,7 +65,12 @@
 	<!-- End Footer -->
 
 	<!-- Custom JS for this page -->
+	<script src="<%=request.getContextPath()%>/adminResources/theme/js/jquery.min.js"></script>
+	<script src="<%=request.getContextPath()%>/adminResources/js/jquery.xcolor.min.js"></script>
 	<script src="<%=request.getContextPath()%>/adminResources/theme/js/action.js"></script>
+	<script
+		src="<%=request.getContextPath()%>/adminResources/js/custom/formgenerator.js"></script>
+	<script src="<%=request.getContextPath()%>/adminResources/theme/js/main.js"></script>
 	<!-- End Inject-->
 </body>
 </html>

@@ -30,7 +30,7 @@ public class GeneralController {
 
 	@Autowired
 	private ModuleService moduleService;
-	
+
 	@Autowired
 	private FormsService formService;
 
@@ -105,7 +105,7 @@ public class GeneralController {
 
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "user/archive-unarchive-form")
 	public ResponseEntity<Object> archiveUnarchiveForm(@RequestParam Long formId, @RequestParam boolean status) {
 		this.formService.archiveForm(formId, status);
@@ -113,11 +113,22 @@ public class GeneralController {
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "user/previewForm")
-	public ModelAndView previewForm(@RequestParam Long formid){
+	@GetMapping(value="user/preview/getForm")
+	public ResponseEntity<List<FormsVO>> getForm(@RequestParam Long formid){
 		List<FormsVO> form = this.formService.findForm(formid);
 		
+		return new ResponseEntity<List<FormsVO>>(form,HttpStatus.OK);
+	}
+
+	@GetMapping(value = "user/preview/add")
+	public ModelAndView previewAdd(@RequestParam Long formid) {
+
+		return new ModelAndView("user/preview/add", "formId", formid);
+	}
+
+	@GetMapping(value = "user/preview/view")
+	public ModelAndView previewView(@RequestParam Long formid) {
 		
-		return new ModelAndView("user/formpreview");
+		return new ModelAndView("user/preview/view", "formId", formid);
 	}
 }

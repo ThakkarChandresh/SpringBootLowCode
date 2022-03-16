@@ -20,8 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.project.enums.ConstantEnum;
 import com.project.enums.UserPathEnum;
+import com.project.model.LoginVO;
 import com.project.model.ModuleVO;
 import com.project.model.ProjectVO;
+import com.project.service.LoginService;
 import com.project.service.ModuleService;
 import com.project.service.ProjectService;
 import com.project.util.BaseMethods;
@@ -39,6 +41,9 @@ public class ModuleController {
 	@Autowired
 	private ProjectService projectService;
 
+	@Autowired
+	private LoginService loginService;
+
 	// READ
 	@GetMapping
 	public ModelAndView getModules() {
@@ -52,7 +57,11 @@ public class ModuleController {
 
 	// CREATE AND UPDATE
 	@PostMapping
-	public ModelAndView addModule(@ModelAttribute ModuleVO moduleVO) {
+	public ModelAndView addModule(@ModelAttribute ModuleVO moduleVO, @ModelAttribute LoginVO loginVO) {
+
+		loginVO.setUsername(this.baseMethods.getUsername());
+		List<LoginVO> loginList = this.loginService.searchLoginID(loginVO);
+		moduleVO.setLoginVO(loginList.get(0));
 
 		this.moduleService.addModule(moduleVO);
 
@@ -137,7 +146,7 @@ public class ModuleController {
 			data = moduleService.searchCurrentProjectModules(activeProjectId, query.trim(), query.trim(), query.trim(),
 					isArchive, username, requestedPage);
 		} else {
-			data = moduleService.searchByProjectId(username,activeProjectId, isArchive, requestedPage);
+			data = moduleService.searchByProjectId(username, activeProjectId, isArchive, requestedPage);
 		}
 
 		return new ResponseEntity<Page<ModuleVO>>(data, HttpStatus.OK);

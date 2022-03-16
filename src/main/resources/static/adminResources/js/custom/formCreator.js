@@ -251,7 +251,6 @@ function formInfo(formId){
 	        async: false,
 	        success: function(response) {
 	        	formViewDetails = response;
-	        	console.log(generateForm(response));
 	        },
 	    });
 	   $('#formDetailModal').modal('show');

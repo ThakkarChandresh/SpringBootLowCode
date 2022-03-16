@@ -80,4 +80,11 @@ public class ModuleVO extends AuditDetails implements Serializable {
 		this.archiveStatus = archiveStatus;
 	}
 
+	public LoginVO getLoginVO() {
+		return loginVO;
+	}
+
+	public void setLoginVO(LoginVO loginVO) {
+		this.loginVO = loginVO;
+	}
 }

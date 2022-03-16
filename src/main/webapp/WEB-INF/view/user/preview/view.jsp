@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,6 +18,17 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/adminResources/theme/css/dataTables.bootstrap4.css">
 <link rel="stylesheet" href="<%=request.getContextPath()%>/adminResources/theme/css/bread.css">
 <!-- End -->
+
+<!-- Internal Js -->
+<script type="text/javascript">
+	var formId;
+	var pageName = 'view';
+	
+	<c:if test='${not empty formId}'>
+		formId = ${formId};
+	</c:if>
+</script>
+<!-- end internal js -->
 
 </head>
 <body>
@@ -73,9 +85,14 @@
 	<!-- Custom JS for this page -->
 	<script src="<%=request.getContextPath()%>/adminResources/theme/js/action.js"></script>
 	<script src="<%=request.getContextPath()%>/adminResources/theme/js/jquery.min.js"></script>
+	<script src="<%=request.getContextPath()%>/adminResources/js/jquery.xcolor.min.js"></script>
+	<script
+		src="<%=request.getContextPath()%>/adminResources/js/custom/formgenerator.js"></script>
+	<script src="<%=request.getContextPath()%>/adminResources/theme/js/main.js"></script>
 	<script src="<%=request.getContextPath()%>/adminResources/theme/js/data-table.js"></script>
 	<script src="<%=request.getContextPath()%>/adminResources/theme/js/jquery.dataTables.js"></script>
 	<script src="<%=request.getContextPath()%>/adminResources/theme/js/dataTables.bootstrap4.js"></script>
+
 	<!-- End -->
 </body>
 </html>

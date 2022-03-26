@@ -149,15 +149,15 @@ public class LoginController {
 
 			return new ModelAndView(GeneralPathEnum.RESET_PASSWORD.getPath(), ConstantEnum.EMAIL.getValue(),
 					forgotPasswordVO.getEmail());
-		}else if(!forgotPasswordDetails.isEmpty() && forgotPasswordDetails.get(0).getStatus().equals("EXPIRED")){
-			
+		} else if (!forgotPasswordDetails.isEmpty() && forgotPasswordDetails.get(0).getStatus().equals("EXPIRED")) {
+
 			String message = "Please try again";
-			
+
 			return new ModelAndView(GeneralPathEnum.FORGOT_PASSWORD.getPath(),
-					ConstantEnum.FORGOT_PASSWORD_VO.getValue(),new ForgotPasswordVO())
+					ConstantEnum.FORGOT_PASSWORD_VO.getValue(), new ForgotPasswordVO())
 							.addObject(ConstantEnum.STATUS.getValue(), "OTP has expired")
 							.addObject(ConstantEnum.MESSAGE.getValue(), message);
-		}else if (attempt < 3) {
+		} else if (attempt < 3) {
 			forgotPasswordVO1.setAttempt(attempt);
 
 			this.forgotPasswordService.setTokenAndOtp(forgotPasswordVO1);
@@ -189,10 +189,10 @@ public class LoginController {
 
 		return new ModelAndView("redirect:/login");
 	}
-	
+
 	@GetMapping(value = "user/test")
-	public ModelAndView test(){
-		
+	public ModelAndView test() {
+
 		return new ModelAndView("user/test");
 	}
 }

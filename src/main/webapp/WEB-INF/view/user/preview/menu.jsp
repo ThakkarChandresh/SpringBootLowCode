@@ -9,7 +9,7 @@
 	<ul class="nav-links">
 		<li>
 			<div class="iocn-link">
-				<a disabled="true"> <i class="fas fa-globe-africa"></i> <span
+				<a> <i class="fas fa-globe-africa"></i> <span
 					class="link_name">Country</span>
 				</a> <i class="fas fa-angle-down arrow"></i>
 			</div>

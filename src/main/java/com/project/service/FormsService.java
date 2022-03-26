@@ -1,6 +1,7 @@
 package com.project.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +24,14 @@ public interface FormsService {
 	void insertForm(FormsVO formsVO);
 
 	void insertFormDetails(FormDetailsVO formDetailsVO);
-	
+
 	void archiveForm(long formId, boolean status);
 
 	List<FormDetailsVO> findFormDetails(Long id);
 
 	List<FormsVO> findForm(Long id);
+
+	Map<String, String> findColors(Long id);
+	
+	boolean checkFormName(FormsVO formVO, String username);
 }

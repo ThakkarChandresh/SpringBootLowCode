@@ -1,6 +1,8 @@
 package com.project.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -15,6 +17,7 @@ import com.project.model.FormDetailsVO;
 import com.project.model.FormsVO;
 import com.project.model.LoginVO;
 import com.project.model.ModuleVO;
+import com.project.model.ProjectVO;
 
 @Service
 @Transactional
@@ -25,7 +28,7 @@ public class FormsServiceImpl implements FormsService {
 
 	@Autowired
 	private FormDetailDao formDetailDao;
-	
+
 	@Override
 	public List<FormsVO> getCurrentModuleForms(LoginVO loginVO, ModuleVO moduleVO) {
 
@@ -35,7 +38,7 @@ public class FormsServiceImpl implements FormsService {
 
 	@Override
 	public Page<FormsVO> findAllForms(String username, Long id, Pageable pageable) {
-		return formsDao.findByLoginVO_UsernameAndModuleVO_IdAndArchiveStatus(username,id, pageable, false);
+		return formsDao.findByLoginVO_UsernameAndModuleVO_IdAndArchiveStatus(username, id, pageable, false);
 	}
 
 	@Override
@@ -49,13 +52,13 @@ public class FormsServiceImpl implements FormsService {
 	@Override
 	public void deleteForm(FormsVO formsVO) {
 		this.formsDao.delete(formsVO);
-		
+
 	}
 
 	@Override
 	public void insertForm(FormsVO formsVO) {
 		this.formsDao.save(formsVO);
-		
+
 	}
 
 	@Override
@@ -72,10 +75,31 @@ public class FormsServiceImpl implements FormsService {
 	public List<FormDetailsVO> findFormDetails(Long id) {
 		return this.formDetailDao.findByFormsVO_FormId(id);
 	}
-	
+
 	@Override
-	public List<FormsVO> findForm(Long id){
+	public List<FormsVO> findForm(Long id) {
 		return this.formsDao.findByFormId(id);
+	}
+
+	@Override
+	public Map<String, String> findColors(Long id) {
+
+		Map<String, String> colors = new HashMap<String, String>();
+
+		ProjectVO projectVO = this.formsDao.findByFormId(id).get(0).getProjectVO();
+		colors.put("headerColor", projectVO.getHeaderColor());
+		colors.put("menuColor", projectVO.getMenuColor());
+		colors.put("footerColor", projectVO.getFooterColor());
+
+		return colors;
+	}
+
+	@Override
+	public boolean checkFormName(FormsVO formVO, String username) {
+		List<FormsVO> formList = this.formsDao.findByLoginVO_UsernameAndFormNameAndModuleVO_IdAndProjectVO_Id(username,
+				formVO.getFormName(), formVO.getModuleVO().getId(), formVO.getProjectVO().getId());
+
+		return formList.isEmpty();
 	}
 
 }

@@ -8,8 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -22,18 +20,19 @@ import com.project.enums.ConstantEnum;
 public class Aws {
 	private static final Logger LOGGER = LogManager.getLogger(Aws.class);
 
-	public static void getFolderSize(String username, String role) {
+	Regions clientRegion = Regions.US_EAST_1;
+	String bucketName = "userprojects";
+
+	public void getFolderSize(String username, String role) {
 		try {
-			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_1)
-					.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("AKIA5AJGT243ELCUZYUS",
-							"WcDMhiizpL8p3c2xLoY6BeanpeAAZqUecheWiCIf")))
-					.build();
+
+			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(clientRegion).build();
 
 			List<String> ans = new ArrayList<String>();
 
 			if (role.equals("ROLE_ADMIN")) {
-				ListObjectsV2Request req = new ListObjectsV2Request().withBucketName("springcrudgenerator")
-						.withPrefix("").withDelimiter("/");
+				ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucketName).withPrefix("")
+						.withDelimiter("/");
 
 				ListObjectsV2Result result = s3.listObjectsV2(req);
 
@@ -54,17 +53,18 @@ public class Aws {
 		}
 	}
 
-	public static Long getObjectSize(String username, AmazonS3 s3) {
+	public Long getObjectSize(String username, AmazonS3 s3) {
 		Long totalSize = 0L;
 
 		try {
-			ListObjectsV2Request req = new ListObjectsV2Request().withBucketName("springcrudgenerator")
-					.withPrefix(username);
+			ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucketName).withPrefix(username);
 
 			ListObjectsV2Result result = s3.listObjectsV2(req);
 
 			List<S3ObjectSummary> objects = result.getObjectSummaries();
+
 			for (S3ObjectSummary os : objects) {
+				System.out.println(os.getKey());
 				totalSize += os.getSize();
 			}
 		} catch (Exception e) {
@@ -90,6 +90,6 @@ public class Aws {
 	}
 
 	public static void main(String[] args) {
-		Aws.getFolderSize("anishkuldeepjain@gmail.com/src", "ROLE_USER");
+		new Aws().getFolderSize("anishkuldeepjain@gmail.com", "ROLE_USER");
 	}
 }

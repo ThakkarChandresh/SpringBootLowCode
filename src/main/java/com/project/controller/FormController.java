@@ -49,6 +49,9 @@ public class FormController {
 
 	@Autowired
 	private ModuleService moduleService;
+	
+	@Autowired
+	private FormsService formService;
 
 	@Autowired
 	private BaseMethods baseMethods;
@@ -186,5 +189,25 @@ public class FormController {
 		this.formsService.deleteForm(formsVO);
 
 		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{moduleId}/{projectId}/{formName}")
+	public ResponseEntity<Boolean> checkModuleName(@ModelAttribute FormsVO formVO,@ModelAttribute ModuleVO moduleVO,
+			@ModelAttribute ProjectVO projectVO,  @PathVariable Long moduleId, @PathVariable Long projectId,
+			@PathVariable String formName) {
+
+		String username = this.baseMethods.getUsername();
+
+		projectVO.setId(projectId);
+
+		formVO.setProjectVO(projectVO);
+
+		moduleVO.setId(moduleId);
+		formVO.setModuleVO(moduleVO);
+		formVO.setFormName(formName);
+
+		boolean status = this.formService.checkFormName(formVO, username);
+
+		return new ResponseEntity<Boolean>(status, HttpStatus.OK);
 	}
 }

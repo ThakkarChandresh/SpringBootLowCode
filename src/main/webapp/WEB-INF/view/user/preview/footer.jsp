@@ -2,5 +2,5 @@
 	pageEncoding="ISO-8859-1"%>
 
 <div class="footer">
-	<div class="foot-text">Copyright@ Chandresh Thakkar</div>
+	<div class="foot-text"></div>
 </div>

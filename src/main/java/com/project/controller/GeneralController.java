@@ -17,6 +17,7 @@ import com.project.model.FormsVO;
 import com.project.model.LoginVO;
 import com.project.model.ModuleVO;
 import com.project.model.ProjectVO;
+import com.project.service.CodeService;
 import com.project.service.FormsService;
 import com.project.service.ModuleService;
 import com.project.service.ProjectService;
@@ -36,6 +37,9 @@ public class GeneralController {
 
 	@Autowired
 	private ProjectService projectService;
+
+	@Autowired
+	private CodeService codeService;
 
 	@GetMapping(value = "user/getActiveUserProjects")
 	public ResponseEntity<List<ProjectVO>> getActiveUserProjects(@ModelAttribute LoginVO loginVO) {
@@ -112,23 +116,32 @@ public class GeneralController {
 
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
-	
-	@GetMapping(value="user/preview/getForm")
-	public ResponseEntity<List<FormsVO>> getForm(@RequestParam Long formid){
+
+	@GetMapping(value = "user/preview/getForm")
+	public ResponseEntity<List<FormsVO>> getForm(@RequestParam Long formid) {
 		List<FormsVO> form = this.formService.findForm(formid);
-		
-		return new ResponseEntity<List<FormsVO>>(form,HttpStatus.OK);
+
+		return new ResponseEntity<List<FormsVO>>(form, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "user/preview/add")
 	public ModelAndView previewAdd(@RequestParam Long formid) {
 
-		return new ModelAndView("user/preview/add", "formId", formid);
+		return new ModelAndView("user/preview/add", "formId", formid).addObject("colorMap",
+				this.formService.findColors(formid));
 	}
 
 	@GetMapping(value = "user/preview/view")
 	public ModelAndView previewView(@RequestParam Long formid) {
+
+		return new ModelAndView("user/preview/view", "formId", formid).addObject("colorMap",
+				this.formService.findColors(formid));
+	}
+
+	@GetMapping(value = "user/download-project")
+	public ResponseEntity<Object> downloadProject(@RequestParam Long projectId) {
 		
-		return new ModelAndView("user/preview/view", "formId", formid);
+		this.codeService.generateProject(projectId);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 }

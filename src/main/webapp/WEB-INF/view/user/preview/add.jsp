@@ -18,6 +18,10 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/adminResources/theme/css/bread.css">
 <!-- End -->
 
+<!-- JQuery.min.js -->
+<script src="<%=request.getContextPath()%>/adminResources/theme/js/jquery.min.js"></script>
+<!-- End JQuery -->
+
 <!-- Internal Js -->
 <script type="text/javascript">
 	var formId;
@@ -33,14 +37,21 @@
 	<!-- Header-->
 	<jsp:include page="header.jsp"></jsp:include>
 	<!-- End Header -->
+	<script type="text/javascript">
+		$(".header").css("background-color", '${colorMap.headerColor}');
+	</script>
 
 
 	<!-- Menu Starts -->
 	<jsp:include page="menu.jsp"></jsp:include>
 	<!-- Menu End -->
+	<script type="text/javascript">
+		$(".sidebar").css("background-color", '${colorMap.menuColor}');
+	</script>
 
 	<!-- Main -->
 	<div id="main">
+	
 		<!-- Breadcrum -->
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="index.html">Country</a></li>
@@ -63,6 +74,9 @@
 	<!-- Footer -->
 	<jsp:include page="footer.jsp"></jsp:include>
 	<!-- End Footer -->
+	<script type="text/javascript">
+		$(".footer").css("background-color", '${colorMap.footerColor}');
+	</script>
 
 	<!-- Custom JS for this page -->
 	<script src="<%=request.getContextPath()%>/adminResources/theme/js/jquery.min.js"></script>

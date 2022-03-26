@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -57,6 +59,28 @@ public class BaseMethods {
 		}
 
 		return requestedPage;
+	}
+
+	public String allLetterCaps(String target) {
+		Matcher m = Pattern.compile("(?:^\\w|[A-Z]|\\b\\w)").matcher(target);
+
+		StringBuilder sb = new StringBuilder();
+		int last = 0;
+		while (m.find()) {
+			sb.append(target.substring(last, m.start()));
+			sb.append(m.group(0).toUpperCase());
+			last = m.end();
+		}
+		sb.append(target.substring(last));
+
+		return sb.toString().replaceAll("\\s+", "");
+	}
+	
+	public String camelize(String target){
+		
+		String allCapital = this.allLetterCaps(target);
+		
+		return Character.toLowerCase(allCapital.charAt(0)) + allCapital.substring(1);
 	}
 
 	public String generateuuid() {

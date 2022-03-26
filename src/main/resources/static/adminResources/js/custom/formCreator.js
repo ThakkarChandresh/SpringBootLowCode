@@ -31,9 +31,28 @@ $('#fieldName').keypress(function(){
 	 $('#fieldNameError').html("");
 });
 
+function checkFormName(projectId, moduleId, formName) {
+    var ajaxResponse;
+
+    $.ajax({
+
+        type: "GET",
+        url: "form/" + moduleId + "/" + projectId + "/" + formName,
+        async: false,
+        success: function(response) {
+            ajaxResponse = response;
+        },
+    });
+
+    return ajaxResponse;
+}
+
 function validateForm(){
 var formName = $('#name').val();
-var formDescription = $('#description').val();	
+var formDescription = $('#description').val();
+
+var projectId = $('#projectId').val();
+var moduleId = $('#moduleId').val();
 
 	$('#formNameError').html("");
 	$('#formDescError').html("");
@@ -48,6 +67,9 @@ var formDescription = $('#description').val();
     }else if(formDetails.length == 0){
     	key = "fieldNameError";
         value = "Add at least one field";
+    }else if (!checkFormName(projectId, moduleId, formName)) {
+        key = "formNameError";
+        value = "Form name already exists"
     }else {
         key = "";
         value = "";

@@ -23,14 +23,17 @@ public interface FormsDao extends JpaRepository<FormsVO, Long> {
 	Page<FormsVO> findByFormNameContainingAndModuleVO_IdOrModuleVO_ModuleNameContainingAndModuleVO_IdOrModuleVO_ProjectVO_ProjectNameContainingAndModuleVO_Id(
 			String formName, Long id, String moduleName, Long id1, String projectName, Long id2, Pageable pageable);
 
-	//find currents module's forms
-	Page<FormsVO> findByLoginVO_UsernameAndModuleVO_IdAndArchiveStatus(String username, Long id, Pageable pageable, boolean staus);
-	
+	// find currents module's forms
+	Page<FormsVO> findByLoginVO_UsernameAndModuleVO_IdAndArchiveStatus(String username, Long id, Pageable pageable,
+			boolean staus);
+
 	// To archive one form
 	@Modifying
 	@Query("update FormsVO fvo set fvo.archiveStatus=:#{#status} where fvo.formId=:#{#id}")
 	public void archiveForm(@Param("id") long formId, @Param("status") boolean status);
 
-	//find form by id
+	// find form by id
 	List<FormsVO> findByFormId(long formId);
+	
+	List<FormsVO> findByLoginVO_UsernameAndFormNameAndModuleVO_IdAndProjectVO_Id(String username,String formName, Long moduleId ,Long projectId);
 }

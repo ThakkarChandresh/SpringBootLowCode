@@ -1,13 +1,17 @@
 package com.project.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -38,6 +42,9 @@ public class FormsVO extends AuditDetails implements Serializable {
 
 	@ManyToOne
 	private ModuleVO moduleVO;
+
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "formsVO", orphanRemoval = true)
+	private List<FormDetailsVO> formDetailsVO = new ArrayList<FormDetailsVO>();
 
 	public Long getFormId() {
 		return formId;

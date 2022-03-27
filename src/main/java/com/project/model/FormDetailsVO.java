@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "form_detail")
 public class FormDetailsVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -27,16 +27,16 @@ public class FormDetailsVO implements Serializable {
 
 	@Column
 	private String fieldType;
-	
+
 	@Column
 	private String value;
-	
+
 	@Column
 	private String label;
-	
+
 	@ManyToOne
 	private FormsVO formsVO;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -88,5 +88,5 @@ public class FormDetailsVO implements Serializable {
 	public void setFormsVO(FormsVO formsVO) {
 		this.formsVO = formsVO;
 	}
-	
+
 }

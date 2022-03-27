@@ -222,6 +222,14 @@ $('#formModal').on('hidden.bs.modal', function(e) {
 	$('#fieldType').prop('selectedIndex',0);
 	$('#sub-menu').empty();
 	
+	$('#formNameError').html("");
+	$('#formDescError').html("");
+	$('#fieldNameError').html("");
+	$(document).find('#valueError').html("");
+	$(document).find('#labelError').html("");
+//	$('#projectId').prop('selectedIndex',0);
+//	changeModelModuleDropdown();
+	
 	$('#table-data').empty();
 	$('#table-data').append('<td class="text-center" colspan="5">Add Fields From Above Section</td>');
 });

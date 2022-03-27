@@ -192,7 +192,7 @@ public class FormController {
 	}
 	
 	@GetMapping(value = "/{moduleId}/{projectId}/{formName}")
-	public ResponseEntity<Boolean> checkModuleName(@ModelAttribute FormsVO formVO,@ModelAttribute ModuleVO moduleVO,
+	public ResponseEntity<Boolean> checkFormName(@ModelAttribute FormsVO formVO,@ModelAttribute ModuleVO moduleVO,
 			@ModelAttribute ProjectVO projectVO,  @PathVariable Long moduleId, @PathVariable Long projectId,
 			@PathVariable String formName) {
 

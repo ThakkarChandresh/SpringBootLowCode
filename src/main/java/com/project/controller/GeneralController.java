@@ -80,9 +80,17 @@ public class GeneralController {
 
 	@GetMapping(value = "user/clickedModuleForms")
 	public ModelAndView clickedModuleForms(@RequestParam Long moduleId, @RequestParam Long projectId) {
+		String username = this.baseMethods.getUsername();
+
+		List<ProjectVO> projectList = this.projectService.getActiveUserProjects(this.baseMethods.getUsername());
+		ProjectVO projectVO = projectList.get(0);
+		List<ModuleVO> moduleList = this.moduleService.getCurrentProjectModule(username, projectVO);
+
 		return new ModelAndView(UserPathEnum.USER_FORMS.getPath())
 				.addObject(ConstantEnum.MODULE_ID.getValue(), moduleId)
-				.addObject(ConstantEnum.PROJECT_ID.getValue(), projectId);
+				.addObject(ConstantEnum.PROJECT_ID.getValue(), projectId)
+				.addObject(ConstantEnum.PROJECT_LIST.getValue(), projectList)
+				.addObject(ConstantEnum.MODULE_LIST.getValue(), moduleList);
 	}
 
 	@GetMapping(value = "user/addForms")
@@ -140,7 +148,7 @@ public class GeneralController {
 
 	@GetMapping(value = "user/download-project")
 	public ResponseEntity<Object> downloadProject(@RequestParam Long projectId) {
-		
+
 		this.codeService.generateProject(projectId);
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}

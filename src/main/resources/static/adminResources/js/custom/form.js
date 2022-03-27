@@ -113,6 +113,9 @@ $(document).ready(function() {
     //Initail Setting Module Id As Clicked Module Id
     if (clickedModuleId){
     	moduleId = clickedModuleId;
+    	$('#projectId').val(clickedProjectId);
+    	changeModalModuleDropdown();
+    	$('#moduleId').val(clickedModuleId);
     }else{
     	moduleId = $('#module-dropdown').val();
     }
@@ -146,54 +149,71 @@ $(document).ready(function() {
 });
 
 $(document).on("change", "#project-module-dropdown", function() {
+	changePageModuleDropdown();
+	$('#projectId').val($('#project-module-dropdown').val());
+	changeModalModuleDropdown();
+});
+
+function changePageModuleDropdown(){
 	$('#module-dropdown').empty();
 	
-	
-projectId = $('#project-module-dropdown').val();
-    
-    $.ajax({
+	projectId = $('#project-module-dropdown').val();
+	    
+	    $.ajax({
 
-        type: "GET",
-        url: "getProjectModule?projectId="+projectId,
-        async: false,
-        success: function(response) {
-        	$('#module-dropdown').append('<option selected="true" disabled="disabled">Select Modules</option>')
-	        	$.each(response, function(index, value) {
-	        		$('#module-dropdown').append('<option value="'+value.id+'">'+value.moduleName+'</option>')
-	        	});
-        },
-        
-    });
-    
-    moduleId = $('#module-dropdown').val();
-    
-});
+	        type: "GET",
+	        url: "getProjectModule?projectId="+projectId,
+	        async: false,
+	        success: function(response) {
+	        	$('#module-dropdown').append('<option selected="true" disabled="disabled">Select Modules</option>')
+		        	$.each(response, function(index, value) {
+		        		$('#module-dropdown').append('<option value="'+value.id+'">'+value.moduleName+'</option>')
+		        	});
+	        },
+	        
+	    });
+	    
+	    moduleId = $('#module-dropdown').val();
+}
 
 $(document).on("change", "#module-dropdown",function(){
 	moduleId = $('#module-dropdown').val();
 	fetchData(0, sort, sortBy, query_String);
+	$('#moduleId').val($('#module-dropdown').val());
 });
 
 $("#projectId").change(function() {
-	$('#moduleId').empty();
-	
-	projectId = $('#projectId').val();
-    
-    $.ajax({
-
-        type: "GET",
-        url: "getProjectModule?projectId="+projectId,
-        async: false,
-        success: function(response) {
-        	$('#moduleId').append('<option selected="true" disabled="disabled">Select Modules</option>')
-	        	$.each(response, function(index, value) {
-	        		$('#moduleId').append('<option value="'+value.id+'">'+value.moduleName+'</option>')
-	        	});
-        },
-        
-    });
+	$(document).find('#project-module-dropdown').val($('#projectId').val());
+	changeModalModuleDropdown();
+	changePageModuleDropdown();
 });
 
+function changeModalModuleDropdown(){
+	$('#moduleId').empty();
+		
+		projectId = $('#projectId').val();
+	    
+	    $.ajax({
+	
+	        type: "GET",
+	        url: "getProjectModule?projectId="+projectId,
+	        async: false,
+	        success: function(response) {
+	        	$('#moduleId').append('<option selected="true" disabled="disabled">Select Modules</option>')
+		        	$.each(response, function(index, value) {
+		        		$('#moduleId').append('<option value="'+value.id+'">'+value.moduleName+'</option>')
+		        	});
+	        },
+	        
+	    });
+}
+
+$('#moduleId').change(function(){
+	
+	$(document).find('#module-dropdown').val($('#moduleId').val());
+	moduleId = $('#module-dropdown').val();
+	fetchData(0, sort, sortBy, query_String);
+});
 
 function fetchData(page, sort, sortBy, query_String) {
 

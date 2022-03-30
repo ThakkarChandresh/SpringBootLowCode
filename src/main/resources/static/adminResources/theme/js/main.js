@@ -44,6 +44,7 @@ function buildPage(formList){
 }
 
 function addForm(form){
+	console.log(generateForm(form));
 	$('#form-card').append(generateForm(form));	
 }
 

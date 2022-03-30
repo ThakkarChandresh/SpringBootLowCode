@@ -300,7 +300,6 @@ function checkName(id, projectName) {
 function downloadProject(projectId) {
 	$("#cover-spin").show();
 	var ajaxResponse;
-
     $.ajax({
 
         type: "GET",

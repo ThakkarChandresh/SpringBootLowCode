@@ -2,7 +2,6 @@ function generateForm(formDetail){
 	var form = document.createElement('form');
 	form.className = "forms-sample";
 	form.method = "post";
-//	form.setAttributeNS(null,"modelAttribute","formsVO");
 	form.action = "#";
 	
 	for(var i=0;i<formDetail.length;i++)

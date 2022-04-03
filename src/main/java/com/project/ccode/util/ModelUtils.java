@@ -1,4 +1,4 @@
-package com.project.util;
+package com.project.ccode.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.project.model.FormDetailsVO;
 import com.project.model.FormsVO;
+import com.project.util.BaseMethods;
 
 import io.github.ccodemvc.CClassVar;
 import io.github.ccodemvc.CCodeClass;
@@ -54,27 +55,27 @@ public class ModelUtils {
 			CCodeMethod method = classS.method();
 
 			CCodeMethodBlock methodBlock = method
-					.createMethod("get" + baseMethods.camelize(formsVO.getFormName()) + "Id").withAM("public")
+					.createMethod("get" + baseMethods.allLetterCaps(formsVO.getFormName()) + "Id").withAM("public")
 					.withReturnType("long").withParameters("");
-			methodBlock.addReturnStatement("this.id");
+			methodBlock.addReturnStatement("this."+baseMethods.camelize(formsVO.getFormName()) + "Id");
 			method.closeMethod();
 
-			methodBlock = method.createMethod("set" + baseMethods.camelize(formsVO.getFormName()) + "Id")
-					.withAM("public").withReturnType("void").withParameters("int id");
-			methodBlock.useVariable("this.fn");
-			methodBlock.assign("id");
+			methodBlock = method.createMethod("set" + baseMethods.allLetterCaps(formsVO.getFormName()) + "Id")
+					.withAM("public").withReturnType("void").withParameters("Long "+baseMethods.camelize(formsVO.getFormName()) + "Id");
+			methodBlock.useVariable("this."+baseMethods.camelize(formsVO.getFormName()) + "Id");
+			methodBlock.assign(baseMethods.camelize(formsVO.getFormName()) + "Id");
 			method.closeMethod();
 
 			for (int i = 0; i < formDetails.size(); i++) {
 				var.addAnnotation("Column");
 				var.createVariable(formDetails.get(i).getFieldName()).withAM("private").type("String");
 
-				methodBlock = method.createMethod("get" + formDetails.get(i).getFieldName()).withAM("public")
+				methodBlock = method.createMethod("get" + baseMethods.allLetterCaps(formDetails.get(i).getFieldName())).withAM("public")
 						.withReturnType("String").withParameters("");
 				methodBlock.addReturnStatement("this." + formDetails.get(i).getFieldName());
 				method.closeMethod();
 
-				methodBlock = method.createMethod("set" + formDetails.get(i).getFieldName()).withAM("public")
+				methodBlock = method.createMethod("set" + baseMethods.allLetterCaps(formDetails.get(i).getFieldName())).withAM("public")
 						.withReturnType("void").withParameters("String " + formDetails.get(i).getFieldName());
 				methodBlock.useVariable("this." + formDetails.get(i).getFieldName());
 				methodBlock.assign(formDetails.get(i).getFieldName());

@@ -49,9 +49,6 @@ public class FormController {
 
 	@Autowired
 	private ModuleService moduleService;
-	
-	@Autowired
-	private FormsService formService;
 
 	@Autowired
 	private BaseMethods baseMethods;
@@ -206,7 +203,7 @@ public class FormController {
 		formVO.setModuleVO(moduleVO);
 		formVO.setFormName(formName);
 
-		boolean status = this.formService.checkFormName(formVO, username);
+		boolean status = this.formsService.checkFormName(formVO, username);
 
 		return new ResponseEntity<Boolean>(status, HttpStatus.OK);
 	}

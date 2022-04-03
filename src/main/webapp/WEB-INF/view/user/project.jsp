@@ -30,6 +30,8 @@
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/adminResources/css/style.css">
 <link rel="stylesheet"
+	href="<%=request.getContextPath()%>/adminResources/css/loader.css">
+<link rel="stylesheet"
 	href="<%=request.getContextPath()%>/adminResources/css/all.css">
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/adminResources/css/switch.css">
@@ -81,6 +83,7 @@
 					</div>
 
 					<div class="card mt-3">
+						<div id="cover-spin"></div>
 						<div class="card-body">
 							<div class="row">
 								<div class="col-12">
@@ -158,25 +161,26 @@
 						<div class="form-group mb-2">
 							<label
 								class="form-label d-flex justify-content-between align-items-center">
-								<span class="font-weight-bold"> Choose Theme <span class="required-field">*</span>
+								<span class="font-weight-bold"> Choose Theme <span
+									class="required-field">*</span>
 							</span>
 							</label>
 							<hr class="my-1">
-							 <label
+							<label
 								class="form-label d-flex justify-content-between align-items-center">
 								<span>Header color<span class="required-field">*</span></span>
 							</label>
 							<f:input path="headerColor" type="text" id="headerColor"
 								class="form-control form-control-lg border-left-1 modal-input coloris"
-								value="#000000" role="button"/>
-							
+								value="#000000" role="button" />
+
 							<label
 								class="form-label d-flex justify-content-between align-items-center">
 								<span class="mt-2">Menu color<span class="required-field">*</span></span>
 							</label>
 							<f:input path="menuColor" type="text" id="menuColor"
 								class="form-control form-control-lg border-left-1 modal-input coloris"
-								value="#000000" role="button"/>
+								value="#000000" role="button" />
 
 							<label
 								class="form-label d-flex justify-content-between align-items-center">
@@ -185,7 +189,7 @@
 							</label>
 							<f:input path="footerColor" type="text" id="footerColor"
 								class="form-control form-control-lg border-left-1 modal-input coloris"
-								value="#000000" role="button"/>
+								value="#000000" role="button" />
 						</div>
 					</div>
 					<div class="modal-footer">

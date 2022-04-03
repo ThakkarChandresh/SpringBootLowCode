@@ -148,8 +148,7 @@ public class GeneralController {
 
 	@GetMapping(value = "user/download-project")
 	public ResponseEntity<Object> downloadProject(@RequestParam Long projectId) {
-
-		this.codeService.generateProject(projectId);
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		String response = this.codeService.generateProject(projectId);
+		return new ResponseEntity<Object>(response, HttpStatus.OK);
 	}
 }

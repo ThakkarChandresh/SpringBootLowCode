@@ -1,4 +1,4 @@
-package com.project.util;
+package com.project.ccode.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.project.model.FormsVO;
+import com.project.util.BaseMethods;
 
 import io.github.ccodemvc.CClassVar;
 import io.github.ccodemvc.CCodeClass;
@@ -34,6 +35,7 @@ public class ControllerUtils {
 			importList.add("org.springframework.web.bind.annotation.PostMapping");
 			importList.add("org.springframework.web.servlet.ModelAndView");
 			importList.add("org.springframework.web.bind.annotation.ModelAttribute");
+			importList.add("org.springframework.web.bind.annotation.RequestParam");
 
 			importList.add("com.project.model.*");
 			importList.add("com.project.service.*");
@@ -51,19 +53,13 @@ public class ControllerUtils {
 
 			CCodeMethod cmethod = classS.method();
 
-			cmethod.addAnnotation("GetMapping(value=\"" + "/" + "\")");
-			CCodeMethodBlock methodblock = cmethod.createMethod("load").withAM("public").withReturnType("ModelAndView")
-					.withParameters("");
-			methodblock.addReturnStatement(CCodeCreateObject.createObject("ModelAndView", "\"login\" "));
-			cmethod.closeMethod();
-
 			cmethod.addAnnotation("GetMapping(value=\""
 					+ baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/add"
 					+ baseMethods.allLetterCaps(formName) + "\")");
-			cmethod.createMethod("add" + baseMethods.allLetterCaps(formName)).withAM("public")
-					.withReturnType("ModelAndView").withParameters("");
+			CCodeMethodBlock methodblock = cmethod.createMethod("add" + baseMethods.allLetterCaps(formName))
+					.withAM("public").withReturnType("ModelAndView").withParameters("");
 			methodblock.addReturnStatement(CCodeCreateObject.createObject("ModelAndView",
-					"\"add" + baseMethods.camelize(formName).toLowerCase() + "\"",
+					"\""+formsVO.getModuleVO().getModuleName().toLowerCase()+"/add" + baseMethods.camelize(formName).toLowerCase() + "\"",
 					"\"" + baseMethods.camelize(formName) + "VO" + "\"",
 					CCodeCreateObject.createObject(baseMethods.allLetterCaps(formName) + "VO")));
 			cmethod.closeMethod();
@@ -78,7 +74,7 @@ public class ControllerUtils {
 					CCodeMethodCall.callMethodUsingObject("this." + baseMethods.camelize(formName) + "Service",
 							"insert", baseMethods.camelize(formName) + "VO"));
 			methodblock.addReturnStatement(CCodeCreateObject.createObject("ModelAndView",
-					"\"redirect:/view" + baseMethods.allLetterCaps(formName) + "\""));
+					"\"redirect:/"+formsVO.getModuleVO().getModuleName().toLowerCase()+"/view" + baseMethods.allLetterCaps(formName) + "\""));
 			cmethod.closeMethod();
 
 			cmethod.addAnnotation("GetMapping(value=\""
@@ -95,7 +91,7 @@ public class ControllerUtils {
 					CCodeMethodCall.callMethodUsingObject("this." + baseMethods.camelize(formName) + "Service",
 							"delete", baseMethods.camelize(formName) + "VO"));
 			methodblock.addReturnStatement(CCodeCreateObject.createObject("ModelAndView",
-					"\"redirect:/view" + baseMethods.allLetterCaps(formName) + "\""));
+					"\"redirect:/"+formsVO.getModuleVO().getModuleName().toLowerCase()+"/view" + baseMethods.allLetterCaps(formName) + "\""));
 			cmethod.closeMethod();
 
 			cmethod.addAnnotation("GetMapping(value=\""
@@ -108,7 +104,7 @@ public class ControllerUtils {
 			methodblock.assign(CCodeMethodCall
 					.callMethodUsingObject("this." + baseMethods.camelize(formName) + "Service", "search"));
 			methodblock.addReturnStatement(CCodeCreateObject.createObject("ModelAndView",
-					"\"view" + baseMethods.camelize(formName).toLowerCase() + "\"",
+					"\""+formsVO.getModuleVO().getModuleName().toLowerCase()+"/view" + baseMethods.camelize(formName).toLowerCase() + "\"",
 					"\"" + baseMethods.camelize(formName) + "List" + "\"", baseMethods.camelize(formName) + "List"));
 			cmethod.closeMethod();
 
@@ -122,10 +118,9 @@ public class ControllerUtils {
 					.type("List<" + baseMethods.allLetterCaps(formName) + "VO>");
 			methodblock
 					.assign(CCodeMethodCall.callMethodUsingObject("this." + baseMethods.camelize(formName) + "Service",
-							"edit",
-							 baseMethods.camelize(formName) + "Id"));
+							"edit", baseMethods.camelize(formName) + "Id"));
 			methodblock.addReturnStatement(CCodeCreateObject.createObject("ModelAndView",
-					"\"add" + baseMethods.camelize(formName).toLowerCase() + "\"",
+					"\""+formsVO.getModuleVO().getModuleName().toLowerCase()+"/add" + baseMethods.camelize(formName).toLowerCase() + "\"",
 					"\"" + baseMethods.camelize(formName) + "VO" + "\"",
 					CCodeMethodCall.callMethodUsingObject(baseMethods.camelize(formName) + "List", "get", "0")));
 			cmethod.closeMethod();

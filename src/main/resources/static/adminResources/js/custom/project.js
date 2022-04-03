@@ -301,13 +301,13 @@ function downloadProject(projectId) {
 	$("#cover-spin").show();
 	var ajaxResponse;
     $.ajax({
-
         type: "GET",
         url: "download-project?projectId=" + projectId,
         async: true,
         success: function(response) {
-            ajaxResponse = response;
-            $("#cover-spin").hide();
+            ajaxResponse = JSON.parse(response);
+            $("#cover-spin").hide();            	
+            window.open(ajaxResponse.presignedURL,"_self")
         },
     });
     return ajaxResponse

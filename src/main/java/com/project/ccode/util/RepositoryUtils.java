@@ -1,4 +1,4 @@
-package com.project.util;
+package com.project.ccode.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.project.model.FormsVO;
+import com.project.util.BaseMethods;
 
 import io.github.ccodemvc.CCodeClass;
 import io.github.ccodemvc.CCodeMVC;
@@ -34,11 +35,11 @@ public class RepositoryUtils {
 			CCodeClass classS = mvc.withPackageStatement("com.project.dao").withRequiredImports(importList);
 			classS.addAnnotation("Repository");
 			classS.create("interface", formName + "DAO").withAM("public");
-			classS.extendS("JPARepository<" + formName + "VO, Long>");
+			classS.extendS("JpaRepository<" + formName + "VO, Long>");
 
 			CCodeMethod method = classS.method();
 			method.createMethod("findBy" + formName + "Id").withAM("public").withReturnType("List<" + formName + "VO>")
-					.withParameters("long " + baseMethods.camelize(formName) + "Id");
+					.withParameters("Long " + baseMethods.camelize(formName) + "Id");
 			method.closeAbstractMethod();
 			classS.closeClass();
 

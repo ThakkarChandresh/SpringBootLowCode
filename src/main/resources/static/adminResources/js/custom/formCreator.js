@@ -122,11 +122,12 @@ $('#description').keypress(function(){
 
 $(document).on('click',"#fieldAddButton", function() {
 	if(validateField()){
+		options = [];
 		field = {};
 		field["fieldName"] = camelize($('#fieldName').val());
 		field["fieldType"] = $('#fieldType').val();
 		
-		if($('#fieldType').val() === 'radio' || $('#fieldType').val() === 'checkbox' || $('#fieldType').val() === 'dropdown' ){
+		if($('#fieldType').val() === 'radiobutton' || $('#fieldType').val() === 'checkbox' || $('#fieldType').val() === 'dropdown' ){
 			$('#sub-menu').empty();
 			$('#sub-menu').append(child);
 			$(note).insertBefore('#sub-menu');

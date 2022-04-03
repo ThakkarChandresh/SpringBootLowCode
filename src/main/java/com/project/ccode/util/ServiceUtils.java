@@ -1,4 +1,4 @@
-package com.project.util;
+package com.project.ccode.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.project.model.FormsVO;
+import com.project.util.BaseMethods;
 
 import io.github.ccodemvc.CCodeClass;
 import io.github.ccodemvc.CCodeMVC;
@@ -44,7 +45,7 @@ public class ServiceUtils {
 			cmethod.closeAbstractMethod();
 
 			cmethod.createMethod("edit").withAM("public").withReturnType("List<"+baseMethods.allLetterCaps(formName)+"VO>")
-				.withParameters("long "+ baseMethods.camelize(formName)+"Id");
+					.withParameters("Long " + baseMethods.camelize(formName) + "Id");
 			cmethod.closeAbstractMethod();
 
 			cl.closeClass();

@@ -180,7 +180,7 @@
 											<option value="date">Date</option>
 											<option value="file">File</option>
 											<option value="datetime-local">Datetime-local</option>
-											<option value="radio">Radio</option>
+											<option value="radiobutton">Radio Button</option>
 											<option value="checkbox">Checkbox</option>
 											<option value="dropdown">Dropdown</option>
 										</select>

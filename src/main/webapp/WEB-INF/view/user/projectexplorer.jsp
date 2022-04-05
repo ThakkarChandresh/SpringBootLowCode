@@ -17,15 +17,19 @@
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/adminResources/css/vendor.bundle.base.css">
 <!-- endinject -->
+
 <!-- plugin css for this page -->
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/adminResources/css/dataTables.bootstrap4.css">
 <!-- End plugin css for this page -->
+
 <!-- inject:css -->
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/adminResources/css/style.css">
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/adminResources/css/all.css">
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/adminResources/css/loader.css">
 <link rel="stylesheet"
 	href="<%=request.getContextPath()%>/adminResources/css/card.css">
 <link rel="stylesheet"
@@ -72,6 +76,7 @@
 					</div>
 
 					<div class="card mt-3">
+					<div id="cover-spin"></div>
 						<div class="card-body">
 							<div class="row">
 								<div class="col-12">

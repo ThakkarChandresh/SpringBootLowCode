@@ -296,7 +296,7 @@ function checkName(id, projectName) {
     return ajaxResponse
 }
 
-//download form button
+//download project
 function downloadProject(projectId) {
 	$("#cover-spin").show();
 	var ajaxResponse;

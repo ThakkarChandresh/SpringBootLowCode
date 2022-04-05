@@ -2,7 +2,7 @@ var columnHeader;
 var headerRow;
 var view='Grid-View';
 
-var downloadButton = '<button type="button" id="downloadButton" class="border-0 d-bloack mt-2 mx-auto btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button>';
+var downloadButton = '<button type="button" onclick="downloadProject(projectId)" id="downloadButton" class="border-0 d-bloack mt-2 mx-auto btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button>';
 var projectGrid = '<div class="col-12 col-sm-6 col-md-6 col-xl-3 grid-margin stretch-card mb-4 px-3"> <div class="card card1 card-body text-center justify-content-center pt-5">';
 
 $('body').tooltip({
@@ -139,6 +139,7 @@ function gridView(response,page){
 	
 	
 	$.each(response.content,function(index,value){
+		downloadButton = downloadButton.replace(/projectId/g, value.id);
 		var newProject = projectGrid + '<input type="hidden" value='+value.id+'> <i class="'+value.projectIcon+' fa-3x"></i><h3 class="mt-3">'+value.projectName+'</h3>'+downloadButton;
 		$('#dataRow').append(newProject);
 	});
@@ -195,3 +196,19 @@ $(document).on('click','#view-button',function(){
 		}
 });
 
+//download project
+function downloadProject(projectId) {
+	$("#cover-spin").show();
+	var ajaxResponse;
+    $.ajax({
+        type: "GET",
+        url: "download-project?projectId=" + projectId,
+        async: true,
+        success: function(response) {
+            ajaxResponse = JSON.parse(response);
+            $("#cover-spin").hide();            	
+            window.open(ajaxResponse.presignedURL,"_self")
+        },
+    });
+    return ajaxResponse
+}

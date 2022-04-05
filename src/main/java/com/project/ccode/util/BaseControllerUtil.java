@@ -3,6 +3,8 @@ package com.project.ccode.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import io.github.ccodemvc.CCodeClass;
@@ -13,6 +15,7 @@ import io.github.ccodemvc.CCodeMethodBlock;
 
 @Component
 public class BaseControllerUtil {
+	private static final Logger LOGGER = LogManager.getLogger(BaseControllerUtil.class);
 
 	public String getBaseControllerContent() {
 
@@ -40,7 +43,7 @@ public class BaseControllerUtil {
 			return mvc.build();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in BaseControllerUtil", e);
 			return "";
 		}
 	}

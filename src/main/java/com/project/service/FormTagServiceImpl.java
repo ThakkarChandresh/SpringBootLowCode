@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.enums.CCodeEnum;
 import com.project.model.FormDetailsVO;
 import com.project.model.FormsVO;
 import com.project.util.BaseMethods;
@@ -39,8 +40,8 @@ public class FormTagServiceImpl implements FormTagService {
 			form.append("<label for=\"" + formDetail.getFieldName() + "\">" + formDetail.getFieldName() + "</label>\n");
 
 			if (formDetail.getFieldType().equals("text-area")) {
-				form.append("<f:textarea class=\"form-control\" path=\"" + formDetail.getFieldName() + "\" id=\""
-						+ formDetail.getFieldName() + "\" rows=\"4\" />");
+				form.append("<f:textarea class=\"form-control\" path=\"" + formDetail.getFieldName()
+						+ CCodeEnum.ID.getValue() + formDetail.getFieldName() + "\" rows=\"4\" />");
 			} else if (formDetail.getFieldType().equals("radiobutton")
 					|| formDetail.getFieldType().equals("checkbox")) {
 				List<String> values = new ArrayList<String>(Arrays.asList(formDetail.getValue().split(",")));
@@ -50,13 +51,13 @@ public class FormTagServiceImpl implements FormTagService {
 					form.append("<div class=\"form-check\">");
 					form.append("<label for=\"" + labels.get(i) + "\">" + labels.get(i) + "</label>\n");
 					form.append("<f:" + formDetail.getFieldType() + " class=\"form-check-input ml-2\" path=\""
-							+ formDetail.getFieldName() + "\" id=\"" + labels.get(i) + "\" value=\"" + values.get(i)
-							+ "\"/>");
+							+ formDetail.getFieldName() + CCodeEnum.ID.getValue() + labels.get(i) + "\" value=\""
+							+ values.get(i) + "\"/>");
 					form.append("</div>\n");
 				}
 			} else if (formDetail.getFieldType().equals("dropdown")) {
-				form.append("<f:select path=\"" + formDetail.getFieldName() + "\" class=\"ml-2\" id=\"" + formDetail.getFieldName()
-						+ "\">");
+				form.append("<f:select path=\"" + formDetail.getFieldName() + "\" class=\"ml-2\" id=\""
+						+ formDetail.getFieldName() + "\">");
 				List<String> values = new ArrayList<String>(Arrays.asList(formDetail.getValue().split(",")));
 				List<String> labels = new ArrayList<String>(Arrays.asList(formDetail.getLabel().split(",")));
 
@@ -67,12 +68,12 @@ public class FormTagServiceImpl implements FormTagService {
 				form.append("</f:select>");
 			} else {
 				form.append("<f:input type=\"" + formDetail.getFieldType() + "\" class=\"form-control\" path=\""
-						+ formDetail.getFieldName() + "\" id=\"" + formDetail.getFieldName() + "\" />");
+						+ formDetail.getFieldName() + CCodeEnum.ID.getValue() + formDetail.getFieldName() + "\" />");
 			}
 			form.append("\n");
 			form.append(endDiv.concat("\n\n"));
 		}
-		form.append("<f:input type=\"hidden\" path=\""+baseMethods.camelize(formsVO.getFormName()) + "Id" +"\" />");
+		form.append("<f:input type=\"hidden\" path=\"" + baseMethods.camelize(formsVO.getFormName()) + "Id" + "\" />");
 		form.append(
 				"<button type=\"submit\" class=\"btn btn-primary mr-2 mt-2\">Submit</button><button class=\"btn btn-light mt-2\" type=\"reset\">Cancel</button>");
 		form.append("</f:form>");

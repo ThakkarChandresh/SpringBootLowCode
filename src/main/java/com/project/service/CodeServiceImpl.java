@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,45 +82,59 @@ public class CodeServiceImpl implements CodeService {
 	@Autowired
 	private LambdaUtils lambdaUtils;
 
+	private static final Logger LOGGER = LogManager.getLogger(CodeServiceImpl.class);
+
 	private static final Regions CLIENT_REGION = Regions.US_EAST_1;
 	private static final String BUCKET_NAME = "userprojects";
 	private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard().withRegion(CLIENT_REGION).build();
 	private static final String SOURCE_BUCKET_NAME = "baseassets";
 
 	public String generateProject(Long id) {
-		ProjectVO projectVO = new ProjectVO();
-		projectVO.setId(id);
+		try {
+			ProjectVO projectVO = new ProjectVO();
+			projectVO.setId(id);
 
-		List<ModuleVO> moduleList = this.moduleService.getCurrentProjectModule(baseMethods.getUsername(), projectVO);
+			List<ModuleVO> moduleList = this.moduleService.getCurrentProjectModule(baseMethods.getUsername(),
+					projectVO);
 
-		this.createApplication(moduleList);
-		this.createRepository(moduleList);
-		this.createController(moduleList);
-		this.createModel(moduleList);
-		this.createService(moduleList);
-		this.createServiceImpl(moduleList);
-		this.createJsCSS(moduleList);
-		this.createPom(moduleList);
-		this.createJSP(moduleList);
-		this.createHeaderFooter(moduleList);
-		this.createMenuAndXML(moduleList);
+			this.createApplication(moduleList);
+			this.createRepository(moduleList);
+			this.createController(moduleList);
+			this.createModel(moduleList);
+			this.createService(moduleList);
+			this.createServiceImpl(moduleList);
+			this.createJsCSS(moduleList);
+			this.createPom(moduleList);
+			this.createJSP(moduleList);
+			this.createHeaderFooter(moduleList);
+			this.createMenuAndXML(moduleList);
 
-		String prefix = baseMethods.getUsername() + "/" + moduleList.get(0).getProjectVO().getProjectName();
-		List<String> ls = objectUtil.getObject(prefix);
-		return lambdaUtils.invokeLmabda(ls, baseMethods.getUsername(),
-				moduleList.get(0).getProjectVO().getProjectName());
+			String prefix = baseMethods.getUsername() + "/" + moduleList.get(0).getProjectVO().getProjectName();
+			List<String> ls = objectUtil.getObject(prefix);
+			return lambdaUtils.invokeLmabda(ls, baseMethods.getUsername(),
+					moduleList.get(0).getProjectVO().getProjectName());
+		} catch (Exception e) {
+			LOGGER.error("Exception In Generate Project", e);
+			return "Some error occurred";
+		}
 	}
 
 	private void createApplication(List<ModuleVO> moduleList) {
-		ModuleVO moduleVO = moduleList.get(0);
+		try {
+			ModuleVO moduleVO = moduleList.get(0);
 
-		String stringObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-				+ "/src/main/java/com/project/" + "Application.java";
+			String stringObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
+					+ "/src/main/java/com/project/" + "Application.java";
 
-		String content = this.applicationUtils.getApplicationContent();
+			String content = this.applicationUtils.getApplicationContent();
 
-		// Upload a text string as a new object.
-		S3_CLIENT.putObject(BUCKET_NAME, stringObjKeyName, content);
+			// Upload a text string as a new object.
+			S3_CLIENT.putObject(BUCKET_NAME, stringObjKeyName, content);
+		} catch (AmazonServiceException e) {
+			LOGGER.error("Exception in creating Application", e);
+		} catch (SdkClientException e) {
+			LOGGER.error("Exception in creating Application", e);
+		}
 	}
 
 	private void createRepository(List<ModuleVO> moduleList) {
@@ -140,9 +156,9 @@ public class CodeServiceImpl implements CodeService {
 				}
 			}
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Repository", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Repository", e);
 		}
 	}
 
@@ -174,9 +190,9 @@ public class CodeServiceImpl implements CodeService {
 				S3_CLIENT.putObject(BUCKET_NAME, stringObjKeyName, content);
 			}
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Controller", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Controller", e);
 		}
 	}
 
@@ -202,9 +218,9 @@ public class CodeServiceImpl implements CodeService {
 
 			}
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Model", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Model", e);
 		}
 	}
 
@@ -228,9 +244,9 @@ public class CodeServiceImpl implements CodeService {
 
 			}
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Service", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Service", e);
 		}
 	}
 
@@ -254,9 +270,9 @@ public class CodeServiceImpl implements CodeService {
 
 			}
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating ServiceImpl", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating ServiceImpl", e);
 		}
 	}
 
@@ -308,11 +324,11 @@ public class CodeServiceImpl implements CodeService {
 			S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("static/adminResources/css/").concat("general.css"),
 					generalCss);
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating static files", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating static files", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in static files IO", e);
 		}
 	}
 
@@ -333,11 +349,11 @@ public class CodeServiceImpl implements CodeService {
 
 			S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("pom.xml"), pomFile);
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating pom", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating pom", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in pom IO", e);
 		}
 	}
 
@@ -371,11 +387,11 @@ public class CodeServiceImpl implements CodeService {
 			S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("footer.jsp"), footerFile);
 
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating header-footer", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating header-footer", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in header-footer IO", e);
 		}
 	}
 
@@ -448,11 +464,11 @@ public class CodeServiceImpl implements CodeService {
 					destObjKeyName.concat("index.jsp"));
 
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Jsp", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Jsp", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in Jsp IO", e);
 		}
 
 	}
@@ -480,11 +496,11 @@ public class CodeServiceImpl implements CodeService {
 			S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("web.xml"), xmlFile);
 
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Menu-xml", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in creating Menu-xml", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in Menu-xml IO", e);
 		}
 	}
 

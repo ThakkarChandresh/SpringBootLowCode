@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,8 @@ public class RepositoryUtils {
 	@Autowired
 	private BaseMethods baseMethods;
 
+	private static final Logger LOGGER = LogManager.getLogger(RepositoryUtils.class);
+	
 	public String getRepositoryContent(FormsVO formsVO) {
 		String formName = baseMethods.allLetterCaps(formsVO.getFormName());
 
@@ -45,8 +49,7 @@ public class RepositoryUtils {
 
 			return mvc.build();
 		} catch (IOException e) {
-			e.printStackTrace();
-	
+			LOGGER.error("Exception in RepositoryUtil", e);
 			return "";
 		}
 	}

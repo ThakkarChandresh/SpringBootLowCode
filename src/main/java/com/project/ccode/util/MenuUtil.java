@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,8 @@ public class MenuUtil {
 
 	@Autowired
 	private FormsService formService;
+
+	private static final Logger LOGGER = LogManager.getLogger(MenuUtil.class);
 
 	private static final Regions CLIENT_REGION = Regions.US_EAST_1;
 	private static final String SOURCE_BUCKET_NAME = "baseassets";
@@ -64,11 +68,11 @@ public class MenuUtil {
 			objectData.close();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in MenuSublist IO", e);
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in MenuSublist", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in MenuSublist", e);
 		}
 		return inputStreamOutput.toString();
 
@@ -97,11 +101,11 @@ public class MenuUtil {
 			objectData.close();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in Menulist IO", e);
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in Menulist", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in Menulist", e);
 		}
 		return inputStreamOutput.toString();
 
@@ -124,11 +128,11 @@ public class MenuUtil {
 			objectData.close();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in MenuUtil", e);
 		} catch (AmazonServiceException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in MenuUtil", e);
 		} catch (SdkClientException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception in MenuUtil IO", e);
 		}
 
 		return inputStreamOutput;

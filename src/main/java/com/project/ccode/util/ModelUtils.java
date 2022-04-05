@@ -3,9 +3,12 @@ package com.project.ccode.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.project.enums.CCodeEnum;
 import com.project.model.FormDetailsVO;
 import com.project.model.FormsVO;
 import com.project.util.BaseMethods;
@@ -21,6 +24,8 @@ public class ModelUtils {
 
 	@Autowired
 	private BaseMethods baseMethods;
+
+	private static final Logger LOGGER = LogManager.getLogger(ModelUtils.class);
 
 	public String getModelContent(FormsVO formsVO, List<FormDetailsVO> formDetails) {
 
@@ -40,44 +45,49 @@ public class ModelUtils {
 
 			classS.addAnnotation("Entity");
 			classS.addAnnotation("Table(name=\"" + baseMethods.camelize(formsVO.getFormName()) + "_table\")");
-			classS.create("class", baseMethods.allLetterCaps(formsVO.getFormName() + "VO")).withAM("public");
+			classS.create("class", baseMethods.allLetterCaps(formsVO.getFormName() + "VO"))
+					.withAM(CCodeEnum.PUBLIC.getValue());
 			classS.implementS("Serializable");
 
-			CClassVar var = classS.classVar();
-			var.createVariable("serialVersionUID").withAM("public", "static", "final").type("long");
-			var.assign("1L");
+			CClassVar variable = classS.classVar();
+			variable.createVariable("serialVersionUID").withAM(CCodeEnum.PUBLIC.getValue(), "static", "final")
+					.type("long");
+			variable.assign("1L");
 
-			var.addAnnotation("Id");
-			var.addAnnotation("Column");
-			var.addAnnotation("GeneratedValue(strategy = GenerationType.IDENTITY)");
-			var.createVariable(baseMethods.camelize(formsVO.getFormName()) + "Id").withAM("private").type("long");
+			variable.addAnnotation("Id");
+			variable.addAnnotation("Column");
+			variable.addAnnotation("GeneratedValue(strategy = GenerationType.IDENTITY)");
+			variable.createVariable(baseMethods.camelize(formsVO.getFormName()) + "Id").withAM("private").type("long");
 
 			CCodeMethod method = classS.method();
 
 			CCodeMethodBlock methodBlock = method
-					.createMethod("get" + baseMethods.allLetterCaps(formsVO.getFormName()) + "Id").withAM("public")
-					.withReturnType("long").withParameters("");
-			methodBlock.addReturnStatement("this."+baseMethods.camelize(formsVO.getFormName()) + "Id");
+					.createMethod("get" + baseMethods.allLetterCaps(formsVO.getFormName()) + "Id")
+					.withAM(CCodeEnum.PUBLIC.getValue()).withReturnType("long").withParameters("");
+			methodBlock
+					.addReturnStatement(CCodeEnum.THIS.getValue() + baseMethods.camelize(formsVO.getFormName()) + "Id");
 			method.closeMethod();
 
 			methodBlock = method.createMethod("set" + baseMethods.allLetterCaps(formsVO.getFormName()) + "Id")
-					.withAM("public").withReturnType("void").withParameters("Long "+baseMethods.camelize(formsVO.getFormName()) + "Id");
-			methodBlock.useVariable("this."+baseMethods.camelize(formsVO.getFormName()) + "Id");
+					.withAM(CCodeEnum.PUBLIC.getValue()).withReturnType("void")
+					.withParameters("Long " + baseMethods.camelize(formsVO.getFormName()) + "Id");
+			methodBlock.useVariable(CCodeEnum.THIS.getValue() + baseMethods.camelize(formsVO.getFormName()) + "Id");
 			methodBlock.assign(baseMethods.camelize(formsVO.getFormName()) + "Id");
 			method.closeMethod();
 
 			for (int i = 0; i < formDetails.size(); i++) {
-				var.addAnnotation("Column");
-				var.createVariable(formDetails.get(i).getFieldName()).withAM("private").type("String");
+				variable.addAnnotation("Column");
+				variable.createVariable(formDetails.get(i).getFieldName()).withAM("private").type("String");
 
-				methodBlock = method.createMethod("get" + baseMethods.allLetterCaps(formDetails.get(i).getFieldName())).withAM("public")
-						.withReturnType("String").withParameters("");
-				methodBlock.addReturnStatement("this." + formDetails.get(i).getFieldName());
+				methodBlock = method.createMethod("get" + baseMethods.allLetterCaps(formDetails.get(i).getFieldName()))
+						.withAM(CCodeEnum.PUBLIC.getValue()).withReturnType("String").withParameters("");
+				methodBlock.addReturnStatement(CCodeEnum.THIS.getValue() + formDetails.get(i).getFieldName());
 				method.closeMethod();
 
-				methodBlock = method.createMethod("set" + baseMethods.allLetterCaps(formDetails.get(i).getFieldName())).withAM("public")
-						.withReturnType("void").withParameters("String " + formDetails.get(i).getFieldName());
-				methodBlock.useVariable("this." + formDetails.get(i).getFieldName());
+				methodBlock = method.createMethod("set" + baseMethods.allLetterCaps(formDetails.get(i).getFieldName()))
+						.withAM(CCodeEnum.PUBLIC.getValue()).withReturnType("void")
+						.withParameters("String " + formDetails.get(i).getFieldName());
+				methodBlock.useVariable(CCodeEnum.THIS.getValue() + formDetails.get(i).getFieldName());
 				methodBlock.assign(formDetails.get(i).getFieldName());
 				method.closeMethod();
 			}
@@ -85,9 +95,8 @@ public class ModelUtils {
 			classS.closeClass();
 
 			return mvc.build();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
+		} catch (Exception e) {
+			LOGGER.error("Exception in ModelUtil", e);
 			return "";
 		}
 

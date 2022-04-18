@@ -146,9 +146,10 @@ public class GeneralController {
 				this.formService.findColors(formid));
 	}
 
-	@GetMapping(value = "user/download-project")
-	public ResponseEntity<Object> downloadProject(@RequestParam Long projectId) {
-		String response = this.codeService.generateProject(projectId);
+	@GetMapping(value = "user/downloadProject")
+	public ResponseEntity<Object> downloadMonolithicProject(@RequestParam Long projectId, @RequestParam String type) {
+		String response = this.codeService.generateProject(projectId, type);
+		
 		return new ResponseEntity<Object>(response, HttpStatus.OK);
 	}
 }

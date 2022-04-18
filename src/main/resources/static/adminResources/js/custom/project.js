@@ -3,7 +3,11 @@ var columnHeader;
 var headerRow;
 var length;
 var columns;
-var deleteEditAction = '<button type="button" id="editButton" onclick="currentProjectData(projectId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Edit"><i class="fas fa-edit action-icon"></i></button><button type="button" id="archiveButton" onclick="archiveUnarchiveProject(projectId,true)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Archive"><i class="fas fa-archive action-icon"></i> </button> <button type="button" id="deleteButton" onclick="deleteCurrentProject(projectId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Delete"> <i class="fas fa-trash-alt action-icon"></i> </button><button type="button" id="downloadButton" onclick="downloadProject(projectId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action"  data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button>';
+
+const Monolithic = "monolithic";
+const Microservice = "microservice";
+
+var deleteEditAction = '<button type="button" id="editButton" onclick="currentProjectData(projectId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Edit"><i class="fas fa-edit action-icon"></i></button><button type="button" id="archiveButton" onclick="archiveUnarchiveProject(projectId,true)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Archive"><i class="fas fa-archive action-icon"></i> </button> <button type="button" id="deleteButton" onclick="deleteCurrentProject(projectId)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip"  data-placement="bottom" title="" data-original-title="Delete"> <i class="fas fa-trash-alt action-icon"></i> </button><button type="button" id="downloadButton" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" aria-expanded="false"  data-toggle="dropdown"  data-placement="bottom" title="" data-original-title="Download"> <i class="fas fa-download action-icon"></i> </button><div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 42px, 0px);"><button class="dropdown-item" onclick="downloadProject(projectId,Monolithic)">Monolithic</button><button class="dropdown-item" onclick="downloadProject(projectId,Microservice)">Microservice</button></div>';
 var toogleOptions = '<div class="col-md-auto"> <label class="toggler" id="archived">Archived Projects</label> <div class="toggle"> <input type="checkbox" id="isArchive" class="check"> <b class="b switch"></b> </div></div>';
 var unarchiveAction = '<button type="button" id="archiveButton" onclick="archiveUnarchiveProject(projectId,false)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Un-Archive"><i class="fas fa-box-open"></i></button>';
 var newdeleteEditAction;
@@ -297,21 +301,24 @@ function checkName(id, projectName) {
 }
 
 //download project
-function downloadProject(projectId) {
+function downloadProject(projectId,projectType) {
 	$("#cover-spin").show();
 	var ajaxResponse;
-    $.ajax({
+	
+	$.ajax({
         type: "GET",
-        url: "download-project?projectId=" + projectId,
+        url: "downloadProject?projectId=" + projectId+"&type="+projectType,
         async: true,
-        success: function(response) {
+        success:function(response) {
             ajaxResponse = JSON.parse(response);
             $("#cover-spin").hide();            	
             window.open(ajaxResponse.presignedURL,"_self")
+        	
         },
     });
     return ajaxResponse
 }
+
 
 //validation on form submit
 $('#projectForm').submit(function(e) {

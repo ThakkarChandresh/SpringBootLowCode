@@ -20,9 +20,10 @@ public class LambdaUtils {
 	private static final Regions CLIENT_REGION = Regions.US_EAST_1;
 	private static final AWSLambda LAMBDA = AWSLambdaClientBuilder.standard().withRegion(CLIENT_REGION).build();
 
-	public String invokeLmabda(List<String> files, String userName, String projectName) {
+	public String invokeLmabda(List<String> files, String userName, String projectName, String type) {
 		Map<String, Object> mp = new HashMap<String, Object>();
 
+		mp.put("type", type);
 		mp.put("files", files);
 		mp.put("username", userName);
 		mp.put("projectname", projectName);

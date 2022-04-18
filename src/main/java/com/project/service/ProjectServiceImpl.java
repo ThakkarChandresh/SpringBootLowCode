@@ -21,7 +21,9 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public void insertProject(ProjectVO projectVO) {
-
+		
+		projectVO.setGeneratedMonolithic(false);
+		projectVO.setGeneratedMicroservice(false);
 		this.projectDao.save(projectVO);
 
 	}
@@ -81,5 +83,16 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public void archiveProject(long id, boolean status) {
 		this.projectDao.archiveProject(id, status);
+	}
+
+	@Override
+	public void setMonolithicStatus(long id, boolean status) {
+		this.projectDao.setMonolithicStatus(id, status);
+	}
+
+	@Override
+	public void setMicroserviceStatus(long id, boolean status) {
+		this.projectDao.setMicroserviceStatus(id, status);
+
 	}
 }

@@ -15,7 +15,7 @@ import com.project.model.ProjectVO;
 @Repository
 public interface ProjectDao extends JpaRepository<ProjectVO, Long> {
 
-	//In Edit
+	// In Edit
 	List<ProjectVO> findById(Long projectId);
 
 	// To avoid duplicate project
@@ -36,4 +36,12 @@ public interface ProjectDao extends JpaRepository<ProjectVO, Long> {
 	@Modifying
 	@Query("update ProjectVO pvo set pvo.archiveStatus=:#{#status} where pvo.id=:#{#id}")
 	void archiveProject(@Param("id") long id, @Param("status") boolean status);
+
+	@Modifying
+	@Query("update ProjectVO pvo set pvo.generatedMonolithic=:#{#status} where pvo.id=:#{#id}")
+	void setMonolithicStatus(@Param("id") long id, @Param("status") boolean status);
+
+	@Modifying
+	@Query("update ProjectVO pvo set pvo.generatedMicroservice=:#{#status} where pvo.id=:#{#id}")
+	void setMicroserviceStatus(@Param("id") long id, @Param("status") boolean status);
 }

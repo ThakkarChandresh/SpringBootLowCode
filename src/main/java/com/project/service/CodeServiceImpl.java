@@ -23,10 +23,12 @@ import com.project.ccode.util.ApplicationUtils;
 import com.project.ccode.util.BaseControllerUtil;
 import com.project.ccode.util.ControllerUtils;
 import com.project.ccode.util.MenuUtil;
+import com.project.ccode.util.MicroControllerUtils;
 import com.project.ccode.util.ModelUtils;
 import com.project.ccode.util.RepositoryUtils;
 import com.project.ccode.util.ServiceImplUtils;
 import com.project.ccode.util.ServiceUtils;
+import com.project.enums.TypeEnum;
 import com.project.lambda.util.LambdaUtils;
 import com.project.model.FormDetailsVO;
 import com.project.model.FormsVO;
@@ -42,6 +44,9 @@ public class CodeServiceImpl implements CodeService {
 
 	@Autowired
 	private BaseMethods baseMethods;
+
+	@Autowired
+	private ProjectService projectService;
 
 	@Autowired
 	private ModuleService moduleService;
@@ -63,6 +68,9 @@ public class CodeServiceImpl implements CodeService {
 
 	@Autowired
 	private ControllerUtils controllerUtils;
+
+	@Autowired
+	private MicroControllerUtils microControllerUtils;
 
 	@Autowired
 	private BaseControllerUtil baseControllerUtil;
@@ -89,7 +97,7 @@ public class CodeServiceImpl implements CodeService {
 	private static final AmazonS3 S3_CLIENT = AmazonS3ClientBuilder.standard().withRegion(CLIENT_REGION).build();
 	private static final String SOURCE_BUCKET_NAME = "baseassets";
 
-	public String generateProject(Long id) {
+	public String generateProject(Long id, String type) {
 		try {
 			ProjectVO projectVO = new ProjectVO();
 			projectVO.setId(id);
@@ -97,36 +105,62 @@ public class CodeServiceImpl implements CodeService {
 			List<ModuleVO> moduleList = this.moduleService.getCurrentProjectModule(baseMethods.getUsername(),
 					projectVO);
 
-			this.createApplication(moduleList);
-			this.createRepository(moduleList);
-			this.createController(moduleList);
-			this.createModel(moduleList);
-			this.createService(moduleList);
-			this.createServiceImpl(moduleList);
-			this.createJsCSS(moduleList);
-			this.createPom(moduleList);
-			this.createJSP(moduleList);
-			this.createHeaderFooter(moduleList);
-			this.createMenuAndXML(moduleList);
+			type = type.trim();
+			projectVO = moduleList.get(0).getProjectVO();
 
-			String prefix = baseMethods.getUsername() + "/" + moduleList.get(0).getProjectVO().getProjectName();
+			if (type.equals(TypeEnum.MONOLITHIC.getValue()) && !projectVO.isGeneratedMonolithic()) {
+				this.createApplication(moduleList, type);
+				this.createRepository(moduleList, type);
+				this.createController(moduleList, type);
+				this.createModel(moduleList, type);
+				this.createService(moduleList, type);
+				this.createServiceImpl(moduleList, type);
+				this.createPom(moduleList, type);
+				this.createJsCSS(moduleList, type);
+				this.createJSP(moduleList, type);
+				this.createHeaderFooter(moduleList, type);
+				this.createMenuAndXML(moduleList, type);
+				this.createProperties(moduleList, type);
+			} else if (type.equals(TypeEnum.MICROSERVICE.getValue()) && !projectVO.isGeneratedMicroservice()) {
+				this.createApplication(moduleList, type);
+				this.createRepository(moduleList, type);
+				this.createController(moduleList, type);
+				this.createModel(moduleList, type);
+				this.createService(moduleList, type);
+				this.createServiceImpl(moduleList, type);
+				this.createPom(moduleList, type);
+				this.createProperties(moduleList, type);
+			}
+
+			String prefix = type + "/" + baseMethods.getUsername() + "/" + projectVO.getProjectName();
 			List<String> ls = objectUtil.getObject(prefix);
-			return lambdaUtils.invokeLmabda(ls, baseMethods.getUsername(),
-					moduleList.get(0).getProjectVO().getProjectName());
+
+			String invokeLambda = lambdaUtils.invokeLmabda(ls, baseMethods.getUsername(), projectVO.getProjectName(),
+					type);
+
+			if (type.equals(TypeEnum.MONOLITHIC.getValue()) && !projectVO.isGeneratedMonolithic()
+					&& invokeLambda != null) {
+				projectService.setMonolithicStatus(id, true);
+			} else if (type.equals(TypeEnum.MICROSERVICE.getValue()) && !projectVO.isGeneratedMicroservice()
+					&& invokeLambda != null) {
+				projectService.setMicroserviceStatus(id, true);
+			}
+
+			return invokeLambda;
 		} catch (Exception e) {
 			LOGGER.error("Exception In Generate Project", e);
 			return "Some error occurred";
 		}
 	}
 
-	private void createApplication(List<ModuleVO> moduleList) {
+	private void createApplication(List<ModuleVO> moduleList, String type) {
 		try {
 			ModuleVO moduleVO = moduleList.get(0);
 
-			String stringObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-					+ "/src/main/java/com/project/" + "Application.java";
+			String stringObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+					+ moduleVO.getProjectVO().getProjectName() + "/src/main/java/com/project/" + "Application.java";
 
-			String content = this.applicationUtils.getApplicationContent();
+			String content = this.applicationUtils.getApplicationContent(type);
 
 			// Upload a text string as a new object.
 			S3_CLIENT.putObject(BUCKET_NAME, stringObjKeyName, content);
@@ -137,7 +171,7 @@ public class CodeServiceImpl implements CodeService {
 		}
 	}
 
-	private void createRepository(List<ModuleVO> moduleList) {
+	private void createRepository(List<ModuleVO> moduleList, String type) {
 		try {
 			LoginVO loginVO = new LoginVO();
 			loginVO.setUsername(baseMethods.getUsername());
@@ -145,9 +179,9 @@ public class CodeServiceImpl implements CodeService {
 				List<FormsVO> formList = this.formService.getCurrentModuleForms(loginVO, moduleVO);
 
 				for (FormsVO formsVO : formList) {
-					String stringObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-							+ "/src/main/java/com/project/dao/" + baseMethods.allLetterCaps(formsVO.getFormName())
-							+ "DAO.java";
+					String stringObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+							+ moduleVO.getProjectVO().getProjectName() + "/src/main/java/com/project/dao/"
+							+ baseMethods.allLetterCaps(formsVO.getFormName()) + "DAO.java";
 
 					String content = this.repositoryUtils.getRepositoryContent(formsVO);
 
@@ -162,7 +196,7 @@ public class CodeServiceImpl implements CodeService {
 		}
 	}
 
-	private void createController(List<ModuleVO> moduleList) {
+	private void createController(List<ModuleVO> moduleList, String type) {
 		try {
 			LoginVO loginVO = new LoginVO();
 			loginVO.setUsername(baseMethods.getUsername());
@@ -174,20 +208,29 @@ public class CodeServiceImpl implements CodeService {
 
 				for (FormsVO formsVO : formList) {
 
-					stringObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-							+ "/src/main/java/com/project/controller/"
+					stringObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+							+ moduleVO.getProjectVO().getProjectName() + "/src/main/java/com/project/controller/"
 							+ baseMethods.allLetterCaps(formsVO.getFormName()) + "Controller.java";
-					content = this.controllerUtils.getControllerContent(formsVO);
 
+					if (type.equals(TypeEnum.MICROSERVICE.getValue())) {
+						content = this.microControllerUtils.getMicroControllerContent(formsVO);
+					} else if (type.equals(TypeEnum.MONOLITHIC.getValue())) {
+						content = this.controllerUtils.getControllerContent(formsVO);
+					} else {
+						content = "";
+					}
 					// Upload a text string as a new object.
 					S3_CLIENT.putObject(BUCKET_NAME, stringObjKeyName, content);
 				}
 
-				stringObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-						+ "/src/main/java/com/project/controller/BaseController.java";
-				content = this.baseControllerUtil.getBaseControllerContent();
+				if (type.equals(TypeEnum.MONOLITHIC.getValue())) {
+					stringObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+							+ moduleVO.getProjectVO().getProjectName()
+							+ "/src/main/java/com/project/controller/BaseController.java";
+					content = this.baseControllerUtil.getBaseControllerContent();
 
-				S3_CLIENT.putObject(BUCKET_NAME, stringObjKeyName, content);
+					S3_CLIENT.putObject(BUCKET_NAME, stringObjKeyName, content);
+				}
 			}
 		} catch (AmazonServiceException e) {
 			LOGGER.error("Exception in creating Controller", e);
@@ -196,7 +239,7 @@ public class CodeServiceImpl implements CodeService {
 		}
 	}
 
-	private void createModel(List<ModuleVO> moduleList) {
+	private void createModel(List<ModuleVO> moduleList, String type) {
 		try {
 			LoginVO loginVO = new LoginVO();
 			loginVO.setUsername(baseMethods.getUsername());
@@ -204,9 +247,9 @@ public class CodeServiceImpl implements CodeService {
 				List<FormsVO> formList = this.formService.getCurrentModuleForms(loginVO, moduleVO);
 
 				for (FormsVO formsVO : formList) {
-					String stringObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-							+ "/src/main/java/com/project/model/" + baseMethods.allLetterCaps(formsVO.getFormName())
-							+ "VO.java";
+					String stringObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+							+ moduleVO.getProjectVO().getProjectName() + "/src/main/java/com/project/model/"
+							+ baseMethods.allLetterCaps(formsVO.getFormName()) + "VO.java";
 
 					List<FormDetailsVO> formDetails = this.formService.findFormDetails(formsVO.getFormId());
 
@@ -224,7 +267,7 @@ public class CodeServiceImpl implements CodeService {
 		}
 	}
 
-	private void createService(List<ModuleVO> moduleList) {
+	private void createService(List<ModuleVO> moduleList, String type) {
 		try {
 			LoginVO loginVO = new LoginVO();
 			loginVO.setUsername(baseMethods.getUsername());
@@ -232,9 +275,9 @@ public class CodeServiceImpl implements CodeService {
 
 				List<FormsVO> formList = this.formService.getCurrentModuleForms(loginVO, moduleVO);
 				for (FormsVO formsVO : formList) {
-					String stringObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-							+ "/src/main/java/com/project/service/" + baseMethods.allLetterCaps(formsVO.getFormName())
-							+ "Service.java";
+					String stringObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+							+ moduleVO.getProjectVO().getProjectName() + "/src/main/java/com/project/service/"
+							+ baseMethods.allLetterCaps(formsVO.getFormName()) + "Service.java";
 
 					String content = this.serviceUtils.getServiceContent(formsVO);
 
@@ -250,7 +293,7 @@ public class CodeServiceImpl implements CodeService {
 		}
 	}
 
-	private void createServiceImpl(List<ModuleVO> moduleList) {
+	private void createServiceImpl(List<ModuleVO> moduleList, String type) {
 		try {
 			LoginVO loginVO = new LoginVO();
 			loginVO.setUsername(baseMethods.getUsername());
@@ -258,9 +301,9 @@ public class CodeServiceImpl implements CodeService {
 				List<FormsVO> formList = this.formService.getCurrentModuleForms(loginVO, moduleVO);
 
 				for (FormsVO formsVO : formList) {
-					String stringObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-							+ "/src/main/java/com/project/service/" + baseMethods.allLetterCaps(formsVO.getFormName())
-							+ "ServiceImpl.java";
+					String stringObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+							+ moduleVO.getProjectVO().getProjectName() + "/src/main/java/com/project/service/"
+							+ baseMethods.allLetterCaps(formsVO.getFormName()) + "ServiceImpl.java";
 
 					String content = this.serviceImplUtils.getServiceImplContent(formsVO);
 
@@ -276,7 +319,7 @@ public class CodeServiceImpl implements CodeService {
 		}
 	}
 
-	private void createJsCSS(List<ModuleVO> moduleList) {
+	private void createJsCSS(List<ModuleVO> moduleList, String type) {
 		String[] cssFiles = new String[] { "all.css", "bootstrap.min.css", "bread.css", "dataTables.bootstrap4.css",
 				"style.css" };
 		String[] jsFiles = new String[] { "action.js", "data-table.js", "dataTables.bootstrap4.js",
@@ -289,8 +332,8 @@ public class CodeServiceImpl implements CodeService {
 		ModuleVO moduleVO = moduleList.get(0);
 
 		try {
-			String destObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-					+ "/src/main/resources/";
+			String destObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+					+ moduleVO.getProjectVO().getProjectName() + "/src/main/resources/";
 
 			for (String cssFile : cssFiles) {
 				S3_CLIENT.copyObject(SOURCE_BUCKET_NAME, "css/".concat(cssFile), BUCKET_NAME,
@@ -304,9 +347,6 @@ public class CodeServiceImpl implements CodeService {
 				S3_CLIENT.copyObject(SOURCE_BUCKET_NAME, "webfonts/".concat(webFonts), BUCKET_NAME,
 						destObjKeyName.concat("static/adminResources/webfonts/").concat(webFonts));
 			}
-
-			S3_CLIENT.copyObject(SOURCE_BUCKET_NAME, "properties/".concat("application.properties"), BUCKET_NAME,
-					destObjKeyName.concat("application.properties"));
 
 			S3_CLIENT.copyObject(SOURCE_BUCKET_NAME, "profile/".concat("profile.png"), BUCKET_NAME,
 					destObjKeyName.concat("static/adminResources/images/profile.png"));
@@ -332,21 +372,48 @@ public class CodeServiceImpl implements CodeService {
 		}
 	}
 
-	private void createPom(List<ModuleVO> moduleList) {
+	private void createProperties(List<ModuleVO> moduleList, String type) {
 
 		ModuleVO moduleVO = moduleList.get(0);
 
 		try {
-			String destObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName() + "/";
+			String destObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+					+ moduleVO.getProjectVO().getProjectName() + "/src/main/resources/";
+
+			S3_CLIENT.copyObject(SOURCE_BUCKET_NAME, "properties/".concat("application.properties"), BUCKET_NAME,
+					destObjKeyName.concat("application.properties"));
+
+		} catch (AmazonServiceException e) {
+			LOGGER.error("Exception in creating properties files", e);
+		} catch (SdkClientException e) {
+			LOGGER.error("Exception in creating properties files", e);
+		}
+	}
+
+	private void createPom(List<ModuleVO> moduleList, String type) {
+
+		ModuleVO moduleVO = moduleList.get(0);
+
+		try {
+			String destObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+					+ moduleVO.getProjectVO().getProjectName() + "/";
 
 			S3Object object = S3_CLIENT.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "pom/".concat("pom.xml")));
 			InputStream objectData = object.getObjectContent();
 			String pomFile = IOUtils.toString(objectData);
+
+			if (type.equals(TypeEnum.MONOLITHIC.getValue())) {
+				object = S3_CLIENT.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "pom/".concat("monolothicaddon.txt")));
+				objectData = object.getObjectContent();
+				String addondependecy = IOUtils.toString(objectData);
+				pomFile = pomFile.replace("[ADD-ON-DEPENDENCY]", addondependecy).replace("[PACKAGING]", "war");
+			} else if (type.equals(TypeEnum.MICROSERVICE.getValue())) {
+				pomFile = pomFile.replace("[ADD-ON-DEPENDENCY]", "").replace("[PACKAGING]", "jar");
+			}
 			objectData.close();
 
 			pomFile = pomFile.replace("[PROJECT-NAME]",
 					baseMethods.allLetterCaps(moduleVO.getProjectVO().getProjectName()));
-
 			S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("pom.xml"), pomFile);
 		} catch (AmazonServiceException e) {
 			LOGGER.error("Exception in creating pom", e);
@@ -357,13 +424,13 @@ public class CodeServiceImpl implements CodeService {
 		}
 	}
 
-	private void createHeaderFooter(List<ModuleVO> moduleList) {
+	private void createHeaderFooter(List<ModuleVO> moduleList, String type) {
 
 		ModuleVO moduleVO = moduleList.get(0);
 
 		try {
-			String destObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
-					+ "/src/main/webapp/WEB-INF/view/";
+			String destObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+					+ moduleVO.getProjectVO().getProjectName() + "/src/main/webapp/WEB-INF/view/";
 
 			S3Object object = S3_CLIENT
 					.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "jsp/".concat("header.jsp")));
@@ -395,12 +462,12 @@ public class CodeServiceImpl implements CodeService {
 		}
 	}
 
-	private void createJSP(List<ModuleVO> moduleList) {
+	private void createJSP(List<ModuleVO> moduleList, String type) {
 		LoginVO loginVO = new LoginVO();
 		loginVO.setUsername(baseMethods.getUsername());
 
-		String destObjKeyName = baseMethods.getUsername() + "/" + moduleList.get(0).getProjectVO().getProjectName()
-				+ "/src/main/webapp/WEB-INF/view/";
+		String destObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+				+ moduleList.get(0).getProjectVO().getProjectName() + "/src/main/webapp/WEB-INF/view/";
 
 		try {
 
@@ -473,10 +540,10 @@ public class CodeServiceImpl implements CodeService {
 
 	}
 
-	private void createMenuAndXML(List<ModuleVO> moduleList) {
+	private void createMenuAndXML(List<ModuleVO> moduleList, String type) {
 		ModuleVO moduleVO = moduleList.get(0);
 
-		String destObjKeyName = baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
+		String destObjKeyName = type + "/" + baseMethods.getUsername() + "/" + moduleVO.getProjectVO().getProjectName()
 				+ "/src/main/webapp/WEB-INF/";
 		try {
 

@@ -88,6 +88,7 @@ public class ControllerUtils {
 			cmethod.addAnnotation(CCodeEnum.GET_MAPPING.getValue()
 					+ baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/delete"
 					+ baseMethods.allLetterCaps(formName) + "\")");
+			
 			cmethod.createMethod("delete" + baseMethods.allLetterCaps(formName)).withAM(CCodeEnum.PUBLIC.getValue())
 					.withReturnType(CCodeEnum.MODELANDVIEW.getValue())
 					.withParameters("@ModelAttribute " + baseMethods.allLetterCaps(formName) + "VO" + " "

@@ -16,13 +16,17 @@ import com.project.model.ProjectVO;
 @Service
 @Transactional
 public class ModuleServiceImpl implements ModuleService {
-
+	@Autowired
+	private ProjectService projectService;
+	
 	@Autowired
 	private ModuleDao moduleDao;
 
 	@Override
 	public void addModule(ModuleVO moduleVO) {
 
+		moduleVO.getProjectVO().setGeneratedMonolithic(false);
+		moduleVO.getProjectVO().setGeneratedMicroservice(false);
 		this.moduleDao.save(moduleVO);
 
 	}
@@ -30,6 +34,8 @@ public class ModuleServiceImpl implements ModuleService {
 	@Override
 	public void deleteModule(ModuleVO moduleVO) {
 
+		this.projectService.setMicroserviceStatus(moduleVO.getProjectVO().getId(), false);
+		this.projectService.setMonolithicStatus(moduleVO.getProjectVO().getId(), false);
 		this.moduleDao.delete(moduleVO);
 
 	}

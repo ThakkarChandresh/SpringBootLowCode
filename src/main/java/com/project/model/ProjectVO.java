@@ -42,6 +42,12 @@ public class ProjectVO extends AuditDetails implements Serializable {
 	@Column
 	private boolean archiveStatus = false;
 
+	@Column
+	private boolean generatedMonolithic = false;
+	
+	@Column
+	private boolean generatedMicroservice = false;
+
 	@ManyToOne
 	private LoginVO loginVO;
 
@@ -119,5 +125,21 @@ public class ProjectVO extends AuditDetails implements Serializable {
 
 	public void setFooterColor(String footerColor) {
 		this.footerColor = footerColor;
+	}
+	
+	public boolean isGeneratedMonolithic() {
+		return generatedMonolithic;
+	}
+
+	public boolean isGeneratedMicroservice() {
+		return generatedMicroservice;
+	}
+
+	public void setGeneratedMonolithic(boolean generatedMonolithic) {
+		this.generatedMonolithic = generatedMonolithic;
+	}
+
+	public void setGeneratedMicroservice(boolean generatedMicroservice) {
+		this.generatedMicroservice = generatedMicroservice;
 	}
 }

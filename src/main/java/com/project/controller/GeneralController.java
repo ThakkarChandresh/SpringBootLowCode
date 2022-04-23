@@ -135,21 +135,19 @@ public class GeneralController {
 	@GetMapping(value = "user/preview/add")
 	public ModelAndView previewAdd(@RequestParam Long formid) {
 
-		return new ModelAndView("user/preview/add", "formId", formid).addObject("colorMap",
-				this.formService.findColors(formid));
+		return new ModelAndView("user/preview/add", "formId", formid);
 	}
 
 	@GetMapping(value = "user/preview/view")
 	public ModelAndView previewView(@RequestParam Long formid) {
 
-		return new ModelAndView("user/preview/view", "formId", formid).addObject("colorMap",
-				this.formService.findColors(formid));
+		return new ModelAndView("user/preview/view", "formId", formid);
 	}
 
 	@GetMapping(value = "user/downloadProject")
 	public ResponseEntity<Object> downloadMonolithicProject(@RequestParam Long projectId, @RequestParam String type) {
 		String response = this.codeService.generateProject(projectId, type);
-		
+
 		return new ResponseEntity<Object>(response, HttpStatus.OK);
 	}
 }

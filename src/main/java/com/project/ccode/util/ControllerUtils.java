@@ -27,7 +27,7 @@ public class ControllerUtils {
 	private BaseMethods baseMethods;
 
 	private static final Logger LOGGER = LogManager.getLogger(ControllerUtils.class);
-	
+
 	public String getControllerContent(FormsVO formsVO) {
 		String formName = formsVO.getFormName();
 
@@ -59,36 +59,24 @@ public class ControllerUtils {
 
 			CCodeMethod cmethod = classS.method();
 
-			cmethod.addAnnotation(CCodeEnum.GET_MAPPING.getValue()
-					+ baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/add"
-					+ baseMethods.allLetterCaps(formName) + "\")");
-			CCodeMethodBlock methodblock = cmethod.createMethod("add" + baseMethods.allLetterCaps(formName))
-					.withAM("public").withReturnType(CCodeEnum.MODELANDVIEW.getValue()).withParameters("");
-			methodblock.addReturnStatement(CCodeCreateObject.createObject(CCodeEnum.MODELANDVIEW.getValue(),
-					"\"" + formsVO.getModuleVO().getModuleName().toLowerCase() + "/add"
-							+ baseMethods.camelize(formName).toLowerCase() + "\"",
-					"\"" + baseMethods.camelize(formName) + "VO" + "\"",
-					CCodeCreateObject.createObject(baseMethods.allLetterCaps(formName) + "VO")));
-			cmethod.closeMethod();
-
 			cmethod.addAnnotation("PostMapping(value=\""
 					+ baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/insert"
 					+ baseMethods.allLetterCaps(formName) + "\")");
-			cmethod.createMethod("insert" + baseMethods.allLetterCaps(formName)).withAM(CCodeEnum.PUBLIC.getValue())
-					.withReturnType(CCodeEnum.MODELANDVIEW.getValue()).withParameters("@ModelAttribute "
-							+ baseMethods.allLetterCaps(formName) + "VO" + " " + baseMethods.camelize(formName) + "VO");
+			CCodeMethodBlock methodblock = cmethod.createMethod("insert" + baseMethods.allLetterCaps(formName))
+					.withAM(CCodeEnum.PUBLIC.getValue()).withReturnType(CCodeEnum.MODELANDVIEW.getValue())
+					.withParameters("@ModelAttribute " + baseMethods.allLetterCaps(formName) + "VO" + " "
+							+ baseMethods.camelize(formName) + "VO");
 			methodblock.addStatement(CCodeMethodCall.callMethodUsingObject(
 					CCodeEnum.THIS.getValue() + baseMethods.camelize(formName) + CCodeEnum.SERVICE.getValue(), "insert",
 					baseMethods.camelize(formName) + "VO"));
 			methodblock.addReturnStatement(CCodeCreateObject.createObject(CCodeEnum.MODELANDVIEW.getValue(),
-					"\"redirect:/" + formsVO.getModuleVO().getModuleName().toLowerCase() + CCodeEnum.VIEW.getValue()
-							+ baseMethods.allLetterCaps(formName) + "\""));
+					"\"redirect:/" + formsVO.getModuleVO().getModuleName().toLowerCase() + CCodeEnum.SLASH.getValue()
+							+ baseMethods.camelize(formName) + "\""));
 			cmethod.closeMethod();
 
-			cmethod.addAnnotation(CCodeEnum.GET_MAPPING.getValue()
+			cmethod.addAnnotation(CCodeEnum.GET_MAPPING.getValue() + CCodeEnum.VALUE.getValue()
 					+ baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/delete"
 					+ baseMethods.allLetterCaps(formName) + "\")");
-			
 			cmethod.createMethod("delete" + baseMethods.allLetterCaps(formName)).withAM(CCodeEnum.PUBLIC.getValue())
 					.withReturnType(CCodeEnum.MODELANDVIEW.getValue())
 					.withParameters("@ModelAttribute " + baseMethods.allLetterCaps(formName) + "VO" + " "
@@ -100,13 +88,13 @@ public class ControllerUtils {
 					CCodeEnum.THIS.getValue() + baseMethods.camelize(formName) + CCodeEnum.SERVICE.getValue(), "delete",
 					baseMethods.camelize(formName) + "VO"));
 			methodblock.addReturnStatement(CCodeCreateObject.createObject(CCodeEnum.MODELANDVIEW.getValue(),
-					"\"redirect:/" + formsVO.getModuleVO().getModuleName().toLowerCase() + CCodeEnum.VIEW.getValue()
-							+ baseMethods.allLetterCaps(formName) + "\""));
+					"\"redirect:/" + formsVO.getModuleVO().getModuleName().toLowerCase() + CCodeEnum.SLASH.getValue()
+							+ baseMethods.camelize(formName) + "\""));
 			cmethod.closeMethod();
 
-			cmethod.addAnnotation(CCodeEnum.GET_MAPPING.getValue()
-					+ baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase()
-					+ CCodeEnum.VIEW.getValue() + baseMethods.allLetterCaps(formName) + "\")");
+			cmethod.addAnnotation(CCodeEnum.GET_MAPPING.getValue() + CCodeEnum.VALUE.getValue()
+					+ baseMethods.camelize(formsVO.getModuleVO().getModuleName()).toLowerCase()
+					+ CCodeEnum.SLASH.getValue() + baseMethods.camelize(formName) + "\")");
 			cmethod.createMethod("view" + baseMethods.allLetterCaps(formName)).withAM(CCodeEnum.PUBLIC.getValue())
 					.withReturnType(CCodeEnum.MODELANDVIEW.getValue()).withParameters("");
 			methodblock.createVariable(baseMethods.camelize(formName) + "List").withAM("")
@@ -114,13 +102,22 @@ public class ControllerUtils {
 			methodblock.assign(CCodeMethodCall.callMethodUsingObject(
 					CCodeEnum.THIS.getValue() + baseMethods.camelize(formName) + CCodeEnum.SERVICE.getValue(),
 					"search"));
-			methodblock.addReturnStatement(CCodeCreateObject.createObject(CCodeEnum.MODELANDVIEW.getValue(),
-					"\"" + formsVO.getModuleVO().getModuleName().toLowerCase() + CCodeEnum.VIEW.getValue()
-							+ baseMethods.camelize(formName).toLowerCase() + "\"",
-					"\"" + baseMethods.camelize(formName) + "List" + "\"", baseMethods.camelize(formName) + "List"));
+			methodblock
+					.addReturnStatement(
+							CCodeMethodCall
+									.callMethodUsingObject(
+											CCodeCreateObject.createObject(CCodeEnum.MODELANDVIEW.getValue(),
+													"\"" + formsVO.getModuleVO().getModuleName().toLowerCase()
+															+ CCodeEnum.SLASH.getValue()
+															+ baseMethods.camelize(formName).toLowerCase() + "\"",
+													"\"" + baseMethods.camelize(formName) + "List" + "\"",
+													baseMethods.camelize(formName) + "List"),
+											"addObject", "\"" + baseMethods.camelize(formName) + "VO" + "\"",
+											CCodeCreateObject
+													.createObject(baseMethods.allLetterCaps(formName) + "VO")));
 			cmethod.closeMethod();
 
-			cmethod.addAnnotation(CCodeEnum.GET_MAPPING.getValue()
+			cmethod.addAnnotation(CCodeEnum.GET_MAPPING.getValue() + CCodeEnum.VALUE.getValue()
 					+ baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/edit"
 					+ baseMethods.allLetterCaps(formName) + "\")");
 			cmethod.createMethod("edit" + baseMethods.allLetterCaps(formName)).withAM(CCodeEnum.PUBLIC.getValue())
@@ -131,11 +128,20 @@ public class ControllerUtils {
 			methodblock.assign(CCodeMethodCall.callMethodUsingObject(
 					CCodeEnum.THIS.getValue() + baseMethods.camelize(formName) + CCodeEnum.SERVICE.getValue(), "edit",
 					baseMethods.camelize(formName) + "Id"));
-			methodblock.addReturnStatement(CCodeCreateObject.createObject(CCodeEnum.MODELANDVIEW.getValue(),
-					"\"" + formsVO.getModuleVO().getModuleName().toLowerCase() + "/add"
-							+ baseMethods.camelize(formName).toLowerCase() + "\"",
-					"\"" + baseMethods.camelize(formName) + "VO" + "\"",
-					CCodeMethodCall.callMethodUsingObject(baseMethods.camelize(formName) + "List", "get", "0")));
+			methodblock.addReturnStatement(CCodeMethodCall
+					.callMethodUsingObject(
+							CCodeMethodCall.callMethodUsingObject(
+									CCodeCreateObject.createObject(CCodeEnum.MODELANDVIEW.getValue(),
+											"\"" + formsVO.getModuleVO().getModuleName().toLowerCase()
+													+ CCodeEnum.SLASH.getValue() + baseMethods.camelize(formName)
+															.toLowerCase()
+													+ "\"",
+											"\"" + baseMethods.camelize(formName) + "List" + "\"",
+											baseMethods.camelize(formName) + "List"),
+									"addObject", "\"" + baseMethods.camelize(formName) + "VO" + "\"",
+									CCodeMethodCall.callMethodUsingObject(baseMethods.camelize(formName) + "List",
+											"get", "0")),
+							"addObject", "\"mode\"", "\"edit\""));
 			cmethod.closeMethod();
 
 			classS.closeClass();

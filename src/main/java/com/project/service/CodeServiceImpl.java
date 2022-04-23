@@ -130,6 +130,7 @@ public class CodeServiceImpl implements CodeService {
 				this.createServiceImpl(moduleList, type);
 				this.createPom(moduleList, type);
 				this.createProperties(moduleList, type);
+				this.createSwaggerConfig(moduleList, type);
 			}
 
 			String prefix = type + "/" + baseMethods.getUsername() + "/" + projectVO.getProjectName();
@@ -320,10 +321,10 @@ public class CodeServiceImpl implements CodeService {
 	}
 
 	private void createJsCSS(List<ModuleVO> moduleList, String type) {
-		String[] cssFiles = new String[] { "all.css", "bootstrap.min.css", "bread.css", "dataTables.bootstrap4.css",
-				"style.css" };
+		String[] cssFiles = new String[] { "all.css", "bootstrap.min.css", "dataTables.bootstrap4.css", "style.css",
+				"general.css" };
 		String[] jsFiles = new String[] { "action.js", "data-table.js", "dataTables.bootstrap4.js",
-				"jquery.dataTables.js", "jquery.min.js" };
+				"jquery.dataTables.js", "jquery.min.js", "bootstrap.min.js" };
 		String[] webFontsFiles = new String[] { "fa-brands-400.eot", "fa-brands-400.svg", "fa-brands-400.ttf",
 				"fa-brands-400.woff", "fa-brands-400.woff2", "fa-regular-400.eot", "fa-regular-400.svg",
 				"fa-regular-400.ttf", "fa-regular-400.woff", "fa-regular-400.woff2", "fa-solid-900.eot",
@@ -351,24 +352,10 @@ public class CodeServiceImpl implements CodeService {
 			S3_CLIENT.copyObject(SOURCE_BUCKET_NAME, "profile/".concat("profile.png"), BUCKET_NAME,
 					destObjKeyName.concat("static/adminResources/images/profile.png"));
 
-			S3Object object = S3_CLIENT
-					.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "css/".concat("general.css")));
-			InputStream objectData = object.getObjectContent();
-			String generalCss = IOUtils.toString(objectData);
-			objectData.close();
-
-			generalCss = generalCss.replace("[HEADER-BACKGROUND]", moduleVO.getProjectVO().getHeaderColor());
-			generalCss = generalCss.replace("[FOOTER-BACKGROUND]", moduleVO.getProjectVO().getFooterColor());
-			generalCss = generalCss.replace("[SIDEBAR-BACKGROUND]", moduleVO.getProjectVO().getMenuColor());
-
-			S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("static/adminResources/css/").concat("general.css"),
-					generalCss);
 		} catch (AmazonServiceException e) {
 			LOGGER.error("Exception in creating static files", e);
 		} catch (SdkClientException e) {
 			LOGGER.error("Exception in creating static files", e);
-		} catch (IOException e) {
-			LOGGER.error("Exception in static files IO", e);
 		}
 	}
 
@@ -403,14 +390,27 @@ public class CodeServiceImpl implements CodeService {
 			String pomFile = IOUtils.toString(objectData);
 
 			if (type.equals(TypeEnum.MONOLITHIC.getValue())) {
-				object = S3_CLIENT.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "pom/".concat("monolothicaddon.txt")));
+				objectData.close();
+				object.close();
+				object = S3_CLIENT
+						.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "pom/".concat("monolothicaddon.txt")));
 				objectData = object.getObjectContent();
-				String addondependecy = IOUtils.toString(objectData);
-				pomFile = pomFile.replace("[ADD-ON-DEPENDENCY]", addondependecy).replace("[PACKAGING]", "war");
+				String addonMonolithicdependecy = IOUtils.toString(objectData);
+				pomFile = pomFile.replace("[ADD-ON-DEPENDENCY]", addonMonolithicdependecy).replace("[PACKAGING]",
+						"war");
+
 			} else if (type.equals(TypeEnum.MICROSERVICE.getValue())) {
-				pomFile = pomFile.replace("[ADD-ON-DEPENDENCY]", "").replace("[PACKAGING]", "jar");
+				objectData.close();
+				object.close();
+				object = S3_CLIENT
+						.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "pom/".concat("microserviceaddon.txt")));
+				objectData = object.getObjectContent();
+				String addonMicroServicedependecy = IOUtils.toString(objectData);
+				pomFile = pomFile.replace("[ADD-ON-DEPENDENCY]", addonMicroServicedependecy).replace("[PACKAGING]",
+						"jar");
 			}
 			objectData.close();
+			object.close();
 
 			pomFile = pomFile.replace("[PROJECT-NAME]",
 					baseMethods.allLetterCaps(moduleVO.getProjectVO().getProjectName()));
@@ -470,27 +470,8 @@ public class CodeServiceImpl implements CodeService {
 				+ moduleList.get(0).getProjectVO().getProjectName() + "/src/main/webapp/WEB-INF/view/";
 
 		try {
-
-			S3Object object = S3_CLIENT.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "jsp/".concat("add.jsp")));
+			S3Object object = S3_CLIENT.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "jsp/".concat("view.jsp")));
 			InputStream objectData = object.getObjectContent();
-			String rawFormJSP = IOUtils.toString(objectData);
-			objectData.close();
-
-			for (ModuleVO moduleVO : moduleList) {
-				List<FormsVO> formList = this.formService.getCurrentModuleForms(loginVO, moduleVO);
-				for (FormsVO formsVO : formList) {
-					String addJsp = rawFormJSP.replace("[FORM-TAG]", this.formTagService.getFormTag(formsVO))
-							.replace("[FORM-NAME]", formsVO.getFormName());
-
-					S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat(
-							baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/add"
-									+ baseMethods.camelize(formsVO.getFormName()).toLowerCase() + ".jsp"),
-							addJsp);
-				}
-			}
-
-			object = S3_CLIENT.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "jsp/".concat("view.jsp")));
-			objectData = object.getObjectContent();
 			String rawViewJSP = IOUtils.toString(objectData);
 
 			objectData.close();
@@ -518,11 +499,14 @@ public class CodeServiceImpl implements CodeService {
 									"/" + baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase()
 											+ "/delete" + baseMethods.allLetterCaps(formsVO.getFormName()) + "?"
 											+ baseMethods.camelize(formsVO.getFormName()) + "Id=${list."
-											+ baseMethods.camelize(formsVO.getFormName()) + "Id}");
+											+ baseMethods.camelize(formsVO.getFormName()) + "Id}")
+							.replace("[FORM-TAG]", this.formTagService.getFormTag(formsVO))
+							.replace("[MODULE-ICON]", moduleVO.getModuleIcon());
 
-					S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat(
-							baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/view"
-									+ baseMethods.camelize(formsVO.getFormName()).toLowerCase() + ".jsp"),
+					S3_CLIENT.putObject(BUCKET_NAME,
+							destObjKeyName.concat(
+									baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/"
+											+ baseMethods.camelize(formsVO.getFormName()).toLowerCase() + ".jsp"),
 							viewJsp);
 				}
 			}
@@ -568,6 +552,33 @@ public class CodeServiceImpl implements CodeService {
 			LOGGER.error("Exception in creating Menu-xml", e);
 		} catch (IOException e) {
 			LOGGER.error("Exception in Menu-xml IO", e);
+		}
+	}
+
+	private void createSwaggerConfig(List<ModuleVO> moduleList, String type) {
+
+		ModuleVO moduleVO = moduleList.get(0);
+
+		try {
+			String destObjKeyName = type + "/" + baseMethods.getUsername() + "/"
+					+ moduleVO.getProjectVO().getProjectName() + "/src/main/java/com/project/config/";
+
+			S3Object object = S3_CLIENT
+					.getObject(new GetObjectRequest(SOURCE_BUCKET_NAME, "config/".concat("SwaggerConfig.java")));
+			InputStream objectData = object.getObjectContent();
+			String swaggerConfig = IOUtils.toString(objectData);
+			swaggerConfig = swaggerConfig.replace("[PROJECT-NAME]",
+					baseMethods.allLetterCaps(moduleVO.getProjectVO().getProjectName()));
+			objectData.close();
+
+			S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("SwaggerConfig.java"), swaggerConfig);
+
+		} catch (AmazonServiceException e) {
+			LOGGER.error("Exception in creating Swagger Congif", e);
+		} catch (SdkClientException e) {
+			LOGGER.error("Exception in creating Swagger Congif", e);
+		} catch (IOException e) {
+			LOGGER.error("Exception in header-footer IO", e);
 		}
 	}
 

@@ -30,10 +30,11 @@ public class FormTagServiceImpl implements FormTagService {
 		List<FormDetailsVO> formDetailsVOList = this.formsService.findFormDetails(formsVO.getFormId());
 
 		StringBuilder form = new StringBuilder();
-		form.append("<f:form class=\"forms-sample\" action=\"/"
+		form.append("<f:form class=\"forms-sample\" id=\"" + formsVO.getFormName() + "Form" + "\" action=\"/"
 				+ baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase() + "/insert"
 				+ baseMethods.allLetterCaps(formsVO.getFormName()) + "\" method=\"POST\" modelAttribute=\""
 				+ baseMethods.camelize(formsVO.getFormName()) + "VO" + "\">\n");
+		form.append("<div class=\"modal-body\">");
 
 		for (FormDetailsVO formDetail : formDetailsVOList) {
 			form.append(divTag.concat("\n"));
@@ -74,8 +75,11 @@ public class FormTagServiceImpl implements FormTagService {
 			form.append(endDiv.concat("\n\n"));
 		}
 		form.append("<f:input type=\"hidden\" path=\"" + baseMethods.camelize(formsVO.getFormName()) + "Id" + "\" />");
+		form.append(endDiv);
+		form.append("<div class=\"modal-footer\">");
 		form.append(
-				"<button type=\"submit\" class=\"btn btn-primary mr-2 mt-2\">Submit</button><button class=\"btn btn-light mt-2\" type=\"reset\">Cancel</button>");
+				"<button class=\"btn btn-light mr-2\" type=\"reset\" data-dismiss=\"modal\">Cancel</button><button type=\"submit\" id=\"submit\" class=\"btn btn-primary\">Submit</button>");
+		form.append(endDiv);
 		form.append("</f:form>");
 
 		return form.toString();

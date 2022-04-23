@@ -138,7 +138,7 @@
 								class="form-control form-control-lg pt-1 px-1" value="" rows="2" />
 							<span id="descError" class="text-danger font-weight-bold">
 							</span>
-							<f:input path="id" type="hidden" id="projectId" value="0" />
+
 						</div>
 						<div class="form-group mb-2">
 							<label
@@ -158,39 +158,7 @@
 							<span id="iconError" class="text-danger font-weight-bold">
 							</span>
 						</div>
-						<div class="form-group mb-2">
-							<label
-								class="form-label d-flex justify-content-between align-items-center">
-								<span class="font-weight-bold"> Choose Theme <span
-									class="required-field">*</span>
-							</span>
-							</label>
-							<hr class="my-1">
-							<label
-								class="form-label d-flex justify-content-between align-items-center">
-								<span>Header color<span class="required-field">*</span></span>
-							</label>
-							<f:input path="headerColor" type="text" id="headerColor"
-								class="form-control form-control-lg border-left-1 modal-input coloris"
-								value="#000000" role="button" />
-
-							<label
-								class="form-label d-flex justify-content-between align-items-center">
-								<span class="mt-2">Menu color<span class="required-field">*</span></span>
-							</label>
-							<f:input path="menuColor" type="text" id="menuColor"
-								class="form-control form-control-lg border-left-1 modal-input coloris"
-								value="#000000" role="button" />
-
-							<label
-								class="form-label d-flex justify-content-between align-items-center">
-								<span class="mt-2">Footer color<span
-									class="required-field">*</span></span>
-							</label>
-							<f:input path="footerColor" type="text" id="footerColor"
-								class="form-control form-control-lg border-left-1 modal-input coloris"
-								value="#000000" role="button" />
-						</div>
+						<f:input path="id" type="hidden" id="projectId" value="0" />
 					</div>
 					<div class="modal-footer">
 						<input type="submit" id="submitButton" value="Add"
@@ -235,8 +203,6 @@
 		src="<%=request.getContextPath()%>/adminResources/js/TableComponents.js"></script>
 	<script
 		src="<%=request.getContextPath()%>/adminResources/js/sweetalert.min.js"></script>
-	<script
-		src="<%=request.getContextPath()%>/adminResources/js/coloris.min.js"></script>
 	<script
 		src="<%=request.getContextPath()%>/adminResources/js/custom/project.js"></script>
 	<!-- End custom js for this page-->

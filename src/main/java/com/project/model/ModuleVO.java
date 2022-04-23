@@ -28,6 +28,9 @@ public class ModuleVO extends AuditDetails implements Serializable {
 	private String moduleDescription;
 
 	@Column
+	private String moduleIcon;
+
+	@Column
 	private boolean archiveStatus = false;
 
 	@ManyToOne
@@ -87,4 +90,13 @@ public class ModuleVO extends AuditDetails implements Serializable {
 	public void setLoginVO(LoginVO loginVO) {
 		this.loginVO = loginVO;
 	}
+	
+	public String getModuleIcon() {
+		return moduleIcon;
+	}
+
+	public void setModuleIcon(String moduleIcon) {
+		this.moduleIcon = moduleIcon;
+	}
+
 }

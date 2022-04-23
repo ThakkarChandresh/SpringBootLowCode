@@ -31,20 +31,11 @@ public class ProjectVO extends AuditDetails implements Serializable {
 	private String projectIcon;
 
 	@Column
-	private String headerColor;
-
-	@Column
-	private String menuColor;
-
-	@Column
-	private String footerColor;
-
-	@Column
 	private boolean archiveStatus = false;
 
 	@Column
 	private boolean generatedMonolithic = false;
-	
+
 	@Column
 	private boolean generatedMicroservice = false;
 
@@ -103,30 +94,6 @@ public class ProjectVO extends AuditDetails implements Serializable {
 		this.archiveStatus = archiveStatus;
 	}
 
-	public String getHeaderColor() {
-		return headerColor;
-	}
-
-	public String getMenuColor() {
-		return menuColor;
-	}
-
-	public String getFooterColor() {
-		return footerColor;
-	}
-
-	public void setHeaderColor(String headerColor) {
-		this.headerColor = headerColor;
-	}
-
-	public void setMenuColor(String menuColor) {
-		this.menuColor = menuColor;
-	}
-
-	public void setFooterColor(String footerColor) {
-		this.footerColor = footerColor;
-	}
-	
 	public boolean isGeneratedMonolithic() {
 		return generatedMonolithic;
 	}

@@ -1,8 +1,6 @@
 package com.project.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -17,7 +15,6 @@ import com.project.model.FormDetailsVO;
 import com.project.model.FormsVO;
 import com.project.model.LoginVO;
 import com.project.model.ModuleVO;
-import com.project.model.ProjectVO;
 
 @Service
 @Transactional
@@ -79,19 +76,6 @@ public class FormsServiceImpl implements FormsService {
 	@Override
 	public List<FormsVO> findForm(Long id) {
 		return this.formsDao.findByFormId(id);
-	}
-
-	@Override
-	public Map<String, String> findColors(Long id) {
-
-		Map<String, String> colors = new HashMap<String, String>();
-
-		ProjectVO projectVO = this.formsDao.findByFormId(id).get(0).getProjectVO();
-		colors.put("headerColor", projectVO.getHeaderColor());
-		colors.put("menuColor", projectVO.getMenuColor());
-		colors.put("footerColor", projectVO.getFooterColor());
-
-		return colors;
 	}
 
 	@Override

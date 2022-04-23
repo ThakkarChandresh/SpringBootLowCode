@@ -17,36 +17,41 @@ $(document).ready(
         columns = [{
             column: 'Id',
             sortable: false,
-            width: '10%',
+            width: '7%',
             name: 'id'
         }, {
             column: 'Module Name',
             sortable: true,
-            width: '18%',
+            width: '15%',
             icon: 'fas fa-sort',
             name: 'moduleName'
         }, {
             column: 'Module Description',
             sortable: true,
-            width: '18%',
+            width: '15%',
             icon: 'fas fa-sort',
             name: 'moduleDescription'
-        }, {
+        },{
+            column: 'Icon',
+            sortable: false,
+            width: '18%',
+        }, 
+        {
             column: 'Created Date',
             sortable: true,
-            width: '18%',
+            width: '15%',
             icon: 'fas fa-sort-down',
             name: 'createdDate'
         }, {
             column: 'Updated Date',
             sortable: true,
-            width: '18%',
+            width: '15%',
             icon: 'fas fa-sort',
             name: 'updatedDate'
         }, {
             column: 'Action',
             sortable: false,
-            width: '18%',
+            width: '15%',
         }]
 
         // Creating Project Dropdown
@@ -116,6 +121,9 @@ $('#moduleDescription').keypress(function(){
 	 $('#descError').html("");
 });
 
+$('#moduleIcon').keypress(function(){
+	 $('#iconError').html("");
+});
 
 // Delete Module
 function deleteModule(moduleId) {
@@ -216,15 +224,14 @@ function fetchData(page, sort, sortBy, query_String) {
 
                     
 
-                    bodyRow += '<tr>' + '<td>' +
-                        ((page * length) + (index + 1)) + '</td>' +
-                        '<td>  <a href="clickedModuleForms?projectId=' +
-                        value.projectVO.id + '&moduleId=' + value.id +
-                        '">' + value.moduleName + '</a> </td>' + '<td>' +
-                        value.moduleDescription + '</td>' + '<td>' +
-                        getDate(value.createdDate) + '</td>' + '<td>' +
-                        getDate(value.updatedDate) + '</td>' + '<td>' +
-                        newAction + '</td>' + '</tr>';
+                    bodyRow += '<tr>' + '<td>' + ((page * length) + (index + 1)) + '</td>' +
+                        '<td>  <a href="clickedModuleForms?projectId=' + value.projectVO.id + '&moduleId=' + value.id +'">' + value.moduleName + '</a> </td>' +
+                        '<td>' + value.moduleDescription + '</td>' + 
+                        '<td><i class="' + value.moduleIcon + '"></i> ' + value.moduleIcon + '</td>' +
+                        '<td>' + getDate(value.createdDate) + '</td>' + 
+                        '<td>' + getDate(value.updatedDate) + '</td>' + 
+                        '<td>' + newAction + '</td>' + 
+                        '</tr>';
                 });
 
                 createTableBody(bodyRow, page, response);
@@ -272,6 +279,7 @@ function currentModuleData(moduleId) {
     $('#moduleName').val(ajaxResponse.moduleName);
     $('#moduleDescription').val(ajaxResponse.moduleDescription);
     $('#moduleId').val(ajaxResponse.id);
+    $('#moduleIcon').val(ajaxResponse.moduleIcon);
     $('#projectDropdownId').val(ajaxResponse.projectVO.id);
 
     $('#model-title').html("Update Module");
@@ -313,21 +321,28 @@ function checkModuleName(projectId, moduleId, moduleName) {
 $('#moduleForm').submit(function(e) {
     var moduleName = $('#moduleName').val();
     var moduleDesc = $('#moduleDescription').val();
-
+    var moduleIcon = $('#moduleIcon').val();
+    
     var projectId = $('#projectDropdownId').val();
     var moduleName = $('#moduleName').val();
     var moduleId = $('#moduleId').val();
-
+    
+    
     $('#nameError').html("");
     $('#descError').html("");
-
+    $('#iconError').html("");
+    
     if (moduleName == "") {
         key = "nameError";
         value = "Module name is required";
     } else if (moduleDesc == "") {
         key = "descError";
         value = "Module description is required";
-    } else if (!checkModuleName(projectId, moduleId, moduleName)) {
+    }else if (moduleIcon == "") {
+        key = "iconError";
+        value = "Module icon is required";
+    }
+    else if (!checkModuleName(projectId, moduleId, moduleName)) {
         key = "nameError";
         value = "Module name already exists";
     } else {

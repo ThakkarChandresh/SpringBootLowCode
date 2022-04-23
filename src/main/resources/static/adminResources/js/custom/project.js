@@ -12,13 +12,6 @@ var toogleOptions = '<div class="col-md-auto"> <label class="toggler" id="archiv
 var unarchiveAction = '<button type="button" id="archiveButton" onclick="archiveUnarchiveProject(projectId,false)" class="border-0 btn btn-outline-secondary btn-rounded btn-icon ml-2 edit-delete-action" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Un-Archive"><i class="fas fa-box-open"></i></button>';
 var newdeleteEditAction;
 
-Coloris({
-	el : '.coloris',
-	swatches : [ '#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51',
-			'#d62828', '#023e8a', '#0077b6', '#0096c7', '#00b4d8',
-			'#48cae4' ]
-});
-
 $('#projectName').keypress(function(){
 	 $('#nameError').html("");
 });
@@ -171,7 +164,7 @@ function fetchData(page, sort, sortBy, query_String) {
                         '<td>' + ((page * length) + (index + 1)) + '</td>' +
                         '<td> <a href="clickedProjectModules?projectId=' + value.id + '">' + value.projectName + '</a> </td>' +
                         '<td>' + value.projectDescription + '</td>' +
-                        '<td><i class="' + value.projectIcon + '"></i> ' + value.projectIcon + '</td>' +
+                        '<td><i class="' + value.projectIcon + '"> </i>' + value.projectIcon + '</td>' +
                         '<td>' + getDate(value.createdDate) + '</td>' +
                         '<td>' + getDate(value.updatedDate) + '</td>' +
                         '<td>' + newAction + '</td>' +
@@ -330,7 +323,8 @@ $('#projectForm').submit(function(e) {
 
     $('#nameError').html("");
     $('#descError').html("");
-
+    $('#iconError').html("");
+    
     if (projectName == "") {
         key = "nameError";
         value = "Project name is required";

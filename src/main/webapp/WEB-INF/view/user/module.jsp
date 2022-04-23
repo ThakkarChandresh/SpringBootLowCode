@@ -160,6 +160,24 @@
 							<span id="descError" class="text-danger font-weight-bold">
 							</span>
 						</div>
+						<div class="form-group mb-2">
+							<label
+								class="form-label d-flex justify-content-between align-items-center">
+								<span> Module Icon <span class="required-field">*</span>
+							</span> <span
+								class="btn btn-outline-secondary btn-rounded btn-icon icon-info-back"
+								data-toggle="tooltip" data-html="true" data-placement="bottom"
+								title=""
+								data-original-title="<b>&emsp;&ensp;&nbsp; Icon Supported</b><ul><li>Fontawesome Icon</li><li>Mdi Icon</li></ul>">
+									<i class="fas fa-info icon-info"></i>
+							</span>
+							</label>
+							<f:input path="moduleIcon" id="moduleIcon"
+								class="form-control form-control-lg border-left-1 modal-input"
+								value="" />
+							<span id="iconError" class="text-danger font-weight-bold">
+							</span>
+						</div>
 
 						<f:input path="id" type="hidden" id="moduleId" value="0" />
 					</div>

@@ -9,7 +9,7 @@ public enum CCodeEnum {
 	THIS("this."),
 	OVERRIDE("Override"),
 	ID("\" id=\""),
-	VIEW("/view"),
+	SLASH("/"),
 	HTTPSTATUS("HttpStatus.OK"),
 	LIST("List<"),
 	OBJECT("Object>"),

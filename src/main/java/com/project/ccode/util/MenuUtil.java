@@ -53,17 +53,12 @@ public class MenuUtil {
 			for (FormsVO formsVO : formList) {
 				formName = formsVO.getFormName();
 
-				inputStreamOutput.append(rawModuleSubList
-						.replace("[ADD-MODULE-NAME]", "Add " + baseMethods.allLetterCaps(formName))
-						.replace("[ADD-MODULE-URL]",
-								"/" + baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase()
-										+ "/add" + baseMethods.allLetterCaps(formName))
-						.replace("[VIEW-MODULE-URL]",
-								"/" + baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase()
-										+ "/view" + baseMethods.allLetterCaps(formName))
-						.replace("[VIEW-MODULE-NAME]", "View " + baseMethods.allLetterCaps(formName))
-						.replace("add-url", "add" + baseMethods.allLetterCaps(formName))
-						.replace("view-url", "view" + baseMethods.allLetterCaps(formName)));
+				inputStreamOutput
+						.append(rawModuleSubList
+								.replace("[VIEW-MODULE-URL]",
+										"/" + baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName())
+												.toLowerCase() + "/" + baseMethods.camelize(formName))
+								.replace("[VIEW-MODULE-NAME]", baseMethods.allLetterCaps(formName)));
 			}
 			objectData.close();
 
@@ -95,7 +90,8 @@ public class MenuUtil {
 			for (ModuleVO currentModule : moduleList) {
 				List<FormsVO> formList = this.formService.getCurrentModuleForms(loginVO, currentModule);
 				inputStreamOutput.append(rawModuleList.replace("[SUB-MENU-LIST]", getSubListContent(formList))
-						.replace("[MODULE-NAME]", baseMethods.allLetterCaps(currentModule.getModuleName())));
+						.replace("[MODULE-NAME]", baseMethods.allLetterCaps(currentModule.getModuleName()))
+						.replace("[MODULE-ICON]", currentModule.getModuleIcon()));
 			}
 
 			objectData.close();

@@ -18,24 +18,24 @@ import com.project.model.ProjectVO;
 public class ModuleServiceImpl implements ModuleService {
 	@Autowired
 	private ProjectService projectService;
-	
+
 	@Autowired
 	private ModuleDao moduleDao;
 
 	@Override
 	public void addModule(ModuleVO moduleVO) {
-
-		moduleVO.getProjectVO().setGeneratedMonolithic(false);
-		moduleVO.getProjectVO().setGeneratedMicroservice(false);
+		this.projectService.setMicroserviceStatus(moduleVO.getProjectVO().getId(), false);
+		this.projectService.setMonolithicStatus(moduleVO.getProjectVO().getId(), false);
 		this.moduleDao.save(moduleVO);
 
 	}
 
 	@Override
 	public void deleteModule(ModuleVO moduleVO) {
-
-		this.projectService.setMicroserviceStatus(moduleVO.getProjectVO().getId(), false);
-		this.projectService.setMonolithicStatus(moduleVO.getProjectVO().getId(), false);
+		
+		Long moduleProjectId = this.moduleDao.moduleProjectId(moduleVO.getId());
+		this.projectService.setMicroserviceStatus(moduleProjectId, false);
+		this.projectService.setMonolithicStatus(moduleProjectId, false);
 		this.moduleDao.delete(moduleVO);
 
 	}
@@ -44,15 +44,14 @@ public class ModuleServiceImpl implements ModuleService {
 	public List<ModuleVO> getCurrentModuleData(ModuleVO moduleVO) {
 
 		return this.moduleDao.findById(moduleVO.getId());
-
 	}
 
 	@Override
 	public boolean checkModuleName(ModuleVO moduleVO, String username) {
 		boolean expression;
 
-		List<ModuleVO> moduleList = this.moduleDao.findByLoginVO_UsernameAndModuleNameAndProjectVO_Id(username, moduleVO.getModuleName(),
-				moduleVO.getProjectVO().getId());
+		List<ModuleVO> moduleList = this.moduleDao.findByLoginVO_UsernameAndModuleNameAndProjectVO_Id(username,
+				moduleVO.getModuleName(), moduleVO.getProjectVO().getId());
 
 		if (!moduleList.isEmpty() && moduleVO.getId() == 0) {
 			expression = false;
@@ -66,20 +65,22 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
-	public List<ModuleVO> getCurrentProjectModule(String username,ProjectVO projectVO) {
-		return this.moduleDao.findByLoginVO_UsernameAndProjectVO_IdAndArchiveStatus(username,projectVO.getId(), false);
+	public List<ModuleVO> getCurrentProjectModule(String username, ProjectVO projectVO) {
+		return this.moduleDao.findByLoginVO_UsernameAndProjectVO_IdAndArchiveStatus(username, projectVO.getId(), false);
 	}
 
 	@Override
 	public Page<ModuleVO> searchCurrentProjectModules(Long id, String moduleName, String moduleDescription,
-			String projectName, boolean isArchive,String username, Pageable pageable) {
+			String projectName, boolean isArchive, String username, Pageable pageable) {
 
-		return this.moduleDao.searchModuleByQuery(moduleName, moduleDescription, projectName, username, isArchive, id, pageable);
+		return this.moduleDao.searchModuleByQuery(moduleName, moduleDescription, projectName, username, isArchive, id,
+				pageable);
 	}
 
 	@Override
-	public Page<ModuleVO> searchByProjectId(String username,Long projectId, boolean isArchive, Pageable pageable) {
-		return moduleDao.findByLoginVO_UsernameAndProjectVO_IdAndArchiveStatus(username,projectId, isArchive, pageable);
+	public Page<ModuleVO> searchByProjectId(String username, Long projectId, boolean isArchive, Pageable pageable) {
+		return moduleDao.findByLoginVO_UsernameAndProjectVO_IdAndArchiveStatus(username, projectId, isArchive,
+				pageable);
 	}
 
 	@Override

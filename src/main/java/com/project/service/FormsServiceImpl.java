@@ -21,6 +21,9 @@ import com.project.model.ModuleVO;
 public class FormsServiceImpl implements FormsService {
 
 	@Autowired
+	private ProjectService projectService;
+	
+	@Autowired
 	private FormsDao formsDao;
 
 	@Autowired
@@ -48,12 +51,17 @@ public class FormsServiceImpl implements FormsService {
 
 	@Override
 	public void deleteForm(FormsVO formsVO) {
+		Long formProjectId = this.formsDao.formProjectId(formsVO.getFormId());
+		this.projectService.setMonolithicStatus(formProjectId, false);
+		this.projectService.setMicroserviceStatus(formProjectId, false);
 		this.formsDao.delete(formsVO);
 
 	}
 
 	@Override
 	public void insertForm(FormsVO formsVO) {
+		this.projectService.setMonolithicStatus(formsVO.getProjectVO().getId(), false);
+		this.projectService.setMicroserviceStatus(formsVO.getProjectVO().getId(), false);
 		this.formsDao.save(formsVO);
 
 	}

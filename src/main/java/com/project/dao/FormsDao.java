@@ -36,4 +36,7 @@ public interface FormsDao extends JpaRepository<FormsVO, Long> {
 	List<FormsVO> findByFormId(long formId);
 	
 	List<FormsVO> findByLoginVO_UsernameAndFormNameAndModuleVO_IdAndProjectVO_Id(String username,String formName, Long moduleId ,Long projectId);
+	
+	@Query("select fvo.projectVO.id from FormsVO fvo where fvo.formId=:#{#id}")
+	public long formProjectId(@Param("id") long formId);
 }

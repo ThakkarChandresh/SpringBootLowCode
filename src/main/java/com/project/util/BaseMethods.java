@@ -65,6 +65,7 @@ public class BaseMethods {
 		Matcher m = Pattern.compile("(?:^\\w|[A-Z]|\\b\\w)").matcher(target);
 
 		StringBuilder sb = new StringBuilder();
+		
 		int last = 0;
 		while (m.find()) {
 			sb.append(target.substring(last, m.start()));

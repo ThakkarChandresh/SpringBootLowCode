@@ -43,4 +43,7 @@ public interface ModuleDao extends JpaRepository<ModuleVO, Long> {
 	@Modifying
 	@Query("update ModuleVO mvo set mvo.archiveStatus=:#{#status} where mvo.id=:#{#id}")
 	public void archiveModule(@Param("id") long moduleId, @Param("status") boolean status);
+	
+	@Query("select mvo.projectVO.id from ModuleVO mvo where mvo.id=:#{#id}")
+	public long moduleProjectId(@Param("id") long moduleId);
 }

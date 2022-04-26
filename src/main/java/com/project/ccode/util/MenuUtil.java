@@ -58,7 +58,8 @@ public class MenuUtil {
 								.replace("[VIEW-MODULE-URL]",
 										"/" + baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName())
 												.toLowerCase() + "/" + baseMethods.camelize(formName))
-								.replace("[VIEW-MODULE-NAME]", baseMethods.allLetterCaps(formName)));
+								.replace("[VIEW-MODULE-NAME]",
+										baseMethods.reverseCamelize(baseMethods.allLetterCaps(formName))));
 			}
 			objectData.close();
 
@@ -90,7 +91,7 @@ public class MenuUtil {
 			for (ModuleVO currentModule : moduleList) {
 				List<FormsVO> formList = this.formService.getCurrentModuleForms(loginVO, currentModule);
 				inputStreamOutput.append(rawModuleList.replace("[SUB-MENU-LIST]", getSubListContent(formList))
-						.replace("[MODULE-NAME]", baseMethods.allLetterCaps(currentModule.getModuleName()))
+						.replace("[MODULE-NAME]", baseMethods.reverseCamelize(currentModule.getModuleName()))
 						.replace("[MODULE-ICON]", currentModule.getModuleIcon()));
 			}
 
@@ -118,7 +119,8 @@ public class MenuUtil {
 			InputStream objectData = object.getObjectContent();
 
 			inputStreamOutput = IOUtils.toString(objectData).replace("[MENU-LIST]", getMenuListContent(moduleList))
-					.replace("[LOGO-NAME]", moduleList.get(0).getProjectVO().getProjectName())
+					.replace("[LOGO-NAME]",
+							baseMethods.reverseCamelize(moduleList.get(0).getProjectVO().getProjectName()))
 					.replace("[ICON-CLASS]", moduleList.get(0).getProjectVO().getProjectIcon());
 
 			objectData.close();

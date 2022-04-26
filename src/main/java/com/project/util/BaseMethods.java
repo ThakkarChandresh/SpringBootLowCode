@@ -62,10 +62,10 @@ public class BaseMethods {
 	}
 
 	public String allLetterCaps(String target) {
-		Matcher m = Pattern.compile("(?:^\\w|[A-Z]|\\b\\w)").matcher(target);
+		Matcher m = Pattern.compile("^(?:\\w|/[A-Z]|\\b\\w)").matcher(target);
 
 		StringBuilder sb = new StringBuilder();
-		
+
 		int last = 0;
 		while (m.find()) {
 			sb.append(target.substring(last, m.start()));
@@ -76,12 +76,24 @@ public class BaseMethods {
 
 		return sb.toString().replaceAll("\\s+", "");
 	}
-	
-	public String camelize(String target){
-		
+
+	public String camelize(String target) {
+
 		String allCapital = this.allLetterCaps(target);
-		
+
 		return Character.toLowerCase(allCapital.charAt(0)) + allCapital.substring(1);
+	}
+
+	public String reverseCamelize(String target) {
+		StringBuilder sb = new StringBuilder();
+		target = target.replaceAll("([A-Z])", " $1");
+		String[] words = target.split(" ");
+
+		for (String word : words) {
+			if (word.length() > 0)
+				sb.append(Character.toUpperCase(word.charAt(0)) + word.substring(1) + " ");
+		}
+		return sb.toString();
 	}
 
 	public String generateuuid() {

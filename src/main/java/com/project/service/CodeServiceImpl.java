@@ -438,7 +438,8 @@ public class CodeServiceImpl implements CodeService {
 			String headerFile = IOUtils.toString(objectData);
 			objectData.close();
 
-			headerFile = headerFile.replace("[PROJECT-NAME-HEADER]", moduleVO.getProjectVO().getProjectName());
+			headerFile = headerFile.replace("[PROJECT-NAME-HEADER]",
+					baseMethods.reverseCamelize(moduleVO.getProjectVO().getProjectName()));
 
 			S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("header.jsp"), headerFile);
 
@@ -449,7 +450,7 @@ public class CodeServiceImpl implements CodeService {
 			objectData1.close();
 
 			footerFile = footerFile.replace("[FOOTER-CONTENT]",
-					"Copyright@" + moduleVO.getProjectVO().getProjectName());
+					"Copyright@" + baseMethods.reverseCamelize(moduleVO.getProjectVO().getProjectName()));
 
 			S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("footer.jsp"), footerFile);
 
@@ -484,10 +485,10 @@ public class CodeServiceImpl implements CodeService {
 					StringBuilder fieldThList = new StringBuilder();
 					StringBuilder fieldTdList = new StringBuilder();
 					for (FormDetailsVO formDetailsVO : formDetailsVOList) {
-						fieldThList.append("<th>" + formDetailsVO.getFieldName() + "</th>");
+						fieldThList.append("<th>" + baseMethods.reverseCamelize(formDetailsVO.getFieldName()) + "</th>");
 						fieldTdList.append("<td>${list." + formDetailsVO.getFieldName() + "}</td>");
 					}
-					String viewJsp = rawViewJSP.replace("[FORM-NAME]", formsVO.getFormName())
+					String viewJsp = rawViewJSP.replace("[FORM-NAME]", baseMethods.reverseCamelize(formsVO.getFormName()))
 							.replace("[FIELD-TH-LIST]", fieldThList).replace("[FIELD-TD-LIST]", fieldTdList)
 							.replace("[LIST-NAME]", baseMethods.camelize(formsVO.getFormName()) + "List")
 							.replace("[EDIT-URL]",

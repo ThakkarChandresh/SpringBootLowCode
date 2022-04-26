@@ -38,7 +38,8 @@ public class FormTagServiceImpl implements FormTagService {
 
 		for (FormDetailsVO formDetail : formDetailsVOList) {
 			form.append(divTag.concat("\n"));
-			form.append("<label for=\"" + formDetail.getFieldName() + "\">" + formDetail.getFieldName() + "</label>\n");
+			form.append("<label for=\"" + formDetail.getFieldName() + "\">"
+					+ baseMethods.reverseCamelize(formDetail.getFieldName()) + "</label>\n");
 
 			if (formDetail.getFieldType().equals("text-area")) {
 				form.append("<f:textarea class=\"form-control\" path=\"" + formDetail.getFieldName()
@@ -50,7 +51,8 @@ public class FormTagServiceImpl implements FormTagService {
 
 				for (int i = 0; i < values.size(); i++) {
 					form.append("<div class=\"form-check\">");
-					form.append("<label for=\"" + labels.get(i) + "\">" + labels.get(i) + "</label>\n");
+					form.append("<label for=\"" + labels.get(i) + "\">" + baseMethods.reverseCamelize(labels.get(i))
+							+ "</label>\n");
 					form.append("<f:" + formDetail.getFieldType() + " class=\"form-check-input ml-2\" path=\""
 							+ formDetail.getFieldName() + CCodeEnum.ID.getValue() + labels.get(i) + "\" value=\""
 							+ values.get(i) + "\"/>");
@@ -63,7 +65,8 @@ public class FormTagServiceImpl implements FormTagService {
 				List<String> labels = new ArrayList<String>(Arrays.asList(formDetail.getLabel().split(",")));
 
 				for (int i = 0; i < values.size(); i++) {
-					form.append("<f:option value=\"" + values.get(i) + "\" >" + labels.get(i) + "</f:option>\n");
+					form.append("<f:option value=\"" + values.get(i) + "\" >"
+							+ baseMethods.reverseCamelize(labels.get(i)) + "</f:option>\n");
 				}
 
 				form.append("</f:select>");

@@ -19,6 +19,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.util.IOUtils;
+import com.project.ccode.util.AjaxUtil;
 import com.project.ccode.util.ApplicationUtils;
 import com.project.ccode.util.BaseControllerUtil;
 import com.project.ccode.util.ControllerUtils;
@@ -80,6 +81,9 @@ public class CodeServiceImpl implements CodeService {
 
 	@Autowired
 	private FormTagService formTagService;
+
+	@Autowired
+	private AjaxUtil ajaxUtil;
 
 	@Autowired
 	private MenuUtil menuUtil;
@@ -348,6 +352,19 @@ public class CodeServiceImpl implements CodeService {
 				S3_CLIENT.copyObject(SOURCE_BUCKET_NAME, "webfonts/".concat(webFonts), BUCKET_NAME,
 						destObjKeyName.concat("static/adminResources/webfonts/").concat(webFonts));
 			}
+			LoginVO loginVO = new LoginVO();
+			loginVO.setUsername(baseMethods.getUsername());
+
+			for (ModuleVO currentModule : moduleList) {
+
+				List<FormsVO> formList = this.formService.getCurrentModuleForms(loginVO, currentModule);
+				for (FormsVO formsVO : formList) {
+					String content = this.ajaxUtil.getAjaxContent(formsVO);
+
+					S3_CLIENT.putObject(BUCKET_NAME, destObjKeyName.concat("static/adminResources/js/custom/edit"
+							+ baseMethods.allLetterCaps(formsVO.getFormName()) + ".js"), content);
+				}
+			}
 
 			S3_CLIENT.copyObject(SOURCE_BUCKET_NAME, "profile/".concat("profile.png"), BUCKET_NAME,
 					destObjKeyName.concat("static/adminResources/images/profile.png"));
@@ -485,23 +502,22 @@ public class CodeServiceImpl implements CodeService {
 					StringBuilder fieldThList = new StringBuilder();
 					StringBuilder fieldTdList = new StringBuilder();
 					for (FormDetailsVO formDetailsVO : formDetailsVOList) {
-						fieldThList.append("<th>" + baseMethods.reverseCamelize(formDetailsVO.getFieldName()) + "</th>");
+						fieldThList
+								.append("<th>" + baseMethods.reverseCamelize(formDetailsVO.getFieldName()) + "</th>");
 						fieldTdList.append("<td>${list." + formDetailsVO.getFieldName() + "}</td>");
 					}
-					String viewJsp = rawViewJSP.replace("[FORM-NAME]", baseMethods.reverseCamelize(formsVO.getFormName()))
+					String viewJsp = rawViewJSP
+							.replace("[FORM-NAME]", baseMethods.reverseCamelize(formsVO.getFormName()))
 							.replace("[FIELD-TH-LIST]", fieldThList).replace("[FIELD-TD-LIST]", fieldTdList)
 							.replace("[LIST-NAME]", baseMethods.camelize(formsVO.getFormName()) + "List")
-							.replace("[EDIT-URL]",
-									"/" + baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase()
-											+ "/edit" + baseMethods.allLetterCaps(formsVO.getFormName()) + "?"
-											+ baseMethods.camelize(formsVO.getFormName()) + "Id=${list."
-											+ baseMethods.camelize(formsVO.getFormName()) + "Id}")
+							.replace("[PRIMARY-KEY]", "${list." + baseMethods.camelize(formsVO.getFormName()) + "Id}")
 							.replace("[DELETE-URL]",
 									"/" + baseMethods.allLetterCaps(formsVO.getModuleVO().getModuleName()).toLowerCase()
 											+ "/delete" + baseMethods.allLetterCaps(formsVO.getFormName()) + "?"
 											+ baseMethods.camelize(formsVO.getFormName()) + "Id=${list."
 											+ baseMethods.camelize(formsVO.getFormName()) + "Id}")
 							.replace("[FORM-TAG]", this.formTagService.getFormTag(formsVO))
+							.replace("[CAP-FORM-NAME]", baseMethods.allLetterCaps(formsVO.getFormName()))
 							.replace("[MODULE-ICON]", moduleVO.getModuleIcon());
 
 					S3_CLIENT.putObject(BUCKET_NAME,

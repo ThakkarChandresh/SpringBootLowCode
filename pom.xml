@@ -79,11 +79,6 @@
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
 		</dependency>
-		<dependency>
-			<groupId>io.github.ccodemvc</groupId>
-			<artifactId>CCodeMVC</artifactId>
-			<version>1.1.2</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -93,6 +88,12 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-lambda</artifactId>
 			<version>1.11.207</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.github.ccodemvc</groupId>
+			<artifactId>ccodemvc</artifactId>
+			<version>1.1.2</version>
 		</dependency>
 	</dependencies>
 	<build>

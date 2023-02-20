@@ -53,7 +53,6 @@
 		<div class="container-fluid page-body-wrapper">
 
 
-
 			<!-- Menu -->
 			<jsp:include page="menu.jsp"></jsp:include>
 

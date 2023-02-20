@@ -9,7 +9,6 @@ function checkEmail(email) {
 	var ajaxResponse;
 
 	$.ajax({
-
 		type : "GET",
 		url : "checkEmail?email=" + email,
 		async : false,

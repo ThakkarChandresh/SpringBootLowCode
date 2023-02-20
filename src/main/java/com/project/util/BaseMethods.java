@@ -38,6 +38,9 @@ public class BaseMethods {
 	@Value("${email.password}")
 	private String password;
 
+	@Value("${email.smtp.host}")
+	private String smtpHost;
+
 	public String getUsername() {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return user.getUsername();
@@ -163,7 +166,7 @@ public class BaseMethods {
 		// setting smtp config
 		properties.put("mail.smtp.auth", "true");
 		properties.put("mail.smtp.starttls.enable", "true");
-		properties.put("mail.smtp.host", "smtp.gmail.com");
+		properties.put("mail.smtp.host", smtpHost);
 		properties.put("mail.smtp.port", "587");
 
 		// step:1 Get The Session

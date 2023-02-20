@@ -147,7 +147,7 @@ public class GeneralController {
 	@GetMapping(value = "user/downloadProject")
 	public ResponseEntity<Object> downloadMonolithicProject(@RequestParam Long projectId, @RequestParam String type) {
 		String response = this.codeService.generateProject(projectId, type);
-
+		System.out.println(response);
 		return new ResponseEntity<Object>(response, HttpStatus.OK);
 	}
 }

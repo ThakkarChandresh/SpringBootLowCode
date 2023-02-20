@@ -148,7 +148,7 @@ public class FormController {
 
 			formDetailsDTOList.add(formDetailDTO);
 		}
-		return new ResponseEntity<List<FormDetailsDTO>>(formDetailsDTOList,HttpStatus.OK);
+		return new ResponseEntity<List<FormDetailsDTO>>(formDetailsDTOList, HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/{page}")
@@ -187,10 +187,10 @@ public class FormController {
 
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/{moduleId}/{projectId}/{formName}")
-	public ResponseEntity<Boolean> checkFormName(@ModelAttribute FormsVO formVO,@ModelAttribute ModuleVO moduleVO,
-			@ModelAttribute ProjectVO projectVO,  @PathVariable Long moduleId, @PathVariable Long projectId,
+	public ResponseEntity<Boolean> checkFormName(@ModelAttribute FormsVO formVO, @ModelAttribute ModuleVO moduleVO,
+			@ModelAttribute ProjectVO projectVO, @PathVariable Long moduleId, @PathVariable Long projectId,
 			@PathVariable String formName) {
 
 		String username = this.baseMethods.getUsername();
